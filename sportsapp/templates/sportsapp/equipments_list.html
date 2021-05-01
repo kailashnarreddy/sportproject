@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+  font-family: "Lato", sans-serif;
+}
+
+/* Fixed sidenav, full height */
+.sidenav {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Style the sidenav links and the dropdown button */
+.sidenav a, .dropdown-btn {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+/* On mouse-over */
+.sidenav a:hover, .dropdown-btn:hover {
+  color: #f1f1f1;
+}
+
+/* Main content */
+.main {
+  margin-left: 200px; /* Same as the width of the sidenav */
+  font-size: 20px; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+/* Add an active class to the active dropdown button */
+.active {
+  background-color: green;
+  color: white;
+}
+
+/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+.dropdown-container {
+  display: none;
+  background-color: #262626;
+  padding-left: 8px;
+}
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+  float: right;
+  padding-right: 8px;
+}
+
+/* Some media queries for responsiveness */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+
+th, td {
+     
+     padding: 5px;
+      text-align: left;    
+    }    
+
+    .myButton {
+
+padding: 10px;
+display:block;
+background-color: green;
+color: white;
+text-align:center;
+position: absolute;
+top: 10px;
+right: 10px;
+
+}
+</style>
+</head>
+<body>
+
+<div class="sidenav">
+    <a href="{% url 'clubsList' %}">Secys</a>
+    {% if clubs_list %}
+    {% for club in clubs_list %}
+  <button class="dropdown-btn">{{club.name}} 
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+    <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
+    <a href="#">Issue History</a>
+  </div>
+  {% endfor %}   
+  {% endif %}
+ 
+</div>
+
+<div class="main">
+    <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
+    <h1>
+        Equipments list
+    </h1>
+    {% if equipments %}
+    <table style="width:100%">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Total Quantity</th>
+            <th>Available Quantity</th>
+            <th>Delete</th>
+            <th>Issue</th>
+          </tr>
+      {% for equi in equipments %}
+      <tr>
+        <td>{{equi.id}}</td>
+        <td>{{equi.name}}</td>
+        <td>{{equi.total_quantity}}</td>
+        <td>{{equi.available_quantity}}</td>
+        <td><a href="{% url 'equipmentDelete' pk=pk id=equi.id %}"><button>delete</button></a></td>
+        <td><a href="{% url 'Issue' pk=pk id=equi.id %}"><button>Issue</button></a></td>
+      </tr>
+    {% endfor %}
+</table>
+  {% else %}
+    <p>There are no Equipments </p>
+  {% endif %} 
+
+</div>
+
+<script>
+/* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+var dropdown = document.getElementsByClassName("dropdown-btn");
+var i;
+
+for (i = 0; i < dropdown.length; i++) {
+  dropdown[i].addEventListener("click", function() {
+  this.classList.toggle("active");
+  var dropdownContent = this.nextElementSibling;
+  if (dropdownContent.style.display === "block") {
+  dropdownContent.style.display = "none";
+  } else {
+  dropdownContent.style.display = "block";
+  }
+  });
+}
+</script>
+
+</body>
+</html> 

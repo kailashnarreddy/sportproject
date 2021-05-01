@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Home page</title>
+</head>
+
+<style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 5px;
+      text-align: left;    
+    }
+ </style>
+
+<body>
+    <h1>
+        Issue list
+    </h1>
+    {% if issue_list %}
+    <table style="width:100%">
+        <tr>
+           
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Date of Issue</th>
+          </tr>
+      {% for obj in issue_list %}
+      <tr>
+        <td>{{obj.equipment_name}}</td>
+        <td>{{obj.quantity}}</td>
+        <td>{{obj.date}}</td>
+        
+      </tr>
+    {% endfor %}
+</table>
+  {% else %}
+    <p>There are no Issue_Equipments </p>
+  {% endif %} 
+</body>
+</html>
