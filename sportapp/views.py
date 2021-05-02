@@ -98,6 +98,7 @@ def IssueFormView(request,pk,id):
                 post.equipment_name= equipment.objects.get(id=id)
                 equipment.objects.filter(id=id).update(available_quantity=quantity)
                 post.save()
+                print(quantity,23)
             return redirect('IssueList',pk=pk)  
 
     else:
@@ -117,17 +118,16 @@ def IssueListView(request,pk):
     issue_list=[]
     for equip in equipments:
         for o in tot_list:
-            if (o.equipment_name == equip.name):
-                issue_list.append(obj)
-       
+            if (str(o.equipment_name) == str(equip.name)):
+                issue_list.append(o)
+    print(issue_list)   
     context = {
              'clubs_list': clubs_list,
              'pk': pk,
             'issue_list':issue_list,
             'equipments':equipments,
         }
-    return render(request, 'sportapp/Issue_list.html', context)     
-
+    return render(request, 'sportapp/Issue_list.html', context)
 
 
 
