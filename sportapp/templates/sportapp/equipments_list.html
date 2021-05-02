@@ -109,7 +109,7 @@ right: 10px;
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
-    <a href="#">Issue History</a>
+    <a href="{% url 'IssueList' club.pk %}">Issue History</a>
   </div>
   {% endfor %}   
   {% endif %}
