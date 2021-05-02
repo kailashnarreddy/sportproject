@@ -102,6 +102,7 @@ right: 10px;
 
 <div class="sidenav">
     <a  href="{% url 'clubsList' %}">Secys</a>
+    <a href="{% url 'superindent' %}">Superindent</a>
     {% if clubs_list %}
     {% for club in clubs_list %}
   <button class="dropdown-btn">{{club.name}} 

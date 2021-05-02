@@ -37,9 +37,11 @@ class issue(models.Model):
     date= models.DateTimeField(auto_now=True)
     is_return= models.BooleanField(default=False)
     is_pending= models.BooleanField(default=True)
-
+    req=models.BooleanField(default=False)
     class Meta:
         ordering = ['date']
+
+
 
 
 

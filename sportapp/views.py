@@ -69,10 +69,12 @@ def EquipmentListView(request,pk):
     clubs_list=clubs.objects.all()
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
+    c=club.name
     context = {
              'clubs_list': clubs_list,
              'pk': pk,
             'equipments':equipments,
+            'c':c,
         }
     return render(request, 'sportapp/equipments_list.html', context)      
 
@@ -96,7 +98,7 @@ def IssueFormView(request,pk,id):
             else:   
                 quantity = equip.available_quantity-post.quantity
                 post.equipment_name= equipment.objects.get(id=id)
-                equipment.objects.filter(id=id).update(available_quantity=quantity)
+               
                 post.save()
                 print(quantity,23)
             return redirect('IssueList',pk=pk)  
@@ -120,7 +122,7 @@ def IssueListView(request,pk):
         for o in tot_list:
             if (str(o.equipment_name) == str(equip.name)):
                 issue_list.append(o)
-    print(issue_list)   
+              
     context = {
              'clubs_list': clubs_list,
              'pk': pk,
@@ -128,8 +130,48 @@ def IssueListView(request,pk):
             'equipments':equipments,
         }
     return render(request, 'sportapp/Issue_list.html', context)
+def returnequipment(request,pk,id):
+    if request.method == 'POST':
+        eq=get_object_or_404(equipment,pk=id)
+        form = ReturnForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+          
+            
+            
+            iss=issue(name=post.name,equipment_name=eq,roll=post.roll,quantity=post.quantity,is_return=True)
+            iss.save()
+            return redirect('IssueList',pk=pk)  
 
+    else:
+        form = ReturnForm()
+        context = {
+            'form':form,
+        }
+    return render(request, 'sportapp/return_form.html', context)    
 
+def superindent(request):
+    iss=issue.objects.filter(is_pending=True)
+    print(iss)
+    context={'iss':iss}
+    return render(request,'sportapp/superindent.html',context)
+def accept(request,pk):
+    issue.objects.filter(pk=pk).update(is_pending=False,req=True)
+    isl=issue.objects.get(pk=pk)
+    ik=isl.equipment_name.id
+    eq=equipment.objects.get(pk=ik)
+    if isl.is_return==False:
+        equipment.objects.filter(pk=ik).update(available_quantity=eq.available_quantity-isl.quantity)
+    
+    if isl.is_return==True:
+        equipment.objects.filter(pk=ik).update(available_quantity=eq.available_quantity+isl.quantity)    
+
+    return redirect('superindent')
+def deny(request,pk):
+     issue.objects.filter(pk=pk).update(is_pending=False)
+    
+     
+     return redirect('superindent')
 
 class TotalListView(ListView):
     model=issue

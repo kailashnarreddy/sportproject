@@ -72,7 +72,15 @@ body {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
-
+tr td:first-child:before
+{
+  counter-increment: Serial;      /* Increment the Serial counter */
+  content: "" counter(Serial); /* Display the counter */
+}
+body
+{
+    counter-reset: Serial;           /* Set the Serial counter to 0 */
+}
 table, th, td {
       border: 1px solid black;
       border-collapse: collapse;
@@ -102,10 +110,15 @@ right: 10px;
 
 <div class="sidenav">
     <a href="{% url 'clubsList' %}">Secys</a>
+    <a href="{% url 'superindent' %}">Superindent</a>
     {% if clubs_list %}
     {% for club in clubs_list %}
+   
   <button class="dropdown-btn">{{club.name}} 
     <i class="fa fa-caret-down"></i>
+    </button>
+   
+
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
@@ -124,21 +137,24 @@ right: 10px;
     {% if equipments %}
     <table style="width:100%">
         <tr>
-            <th>ID</th>
+            <th>sno</th>
             <th>Name</th>
             <th>Total Quantity</th>
             <th>Available Quantity</th>
             <th>Delete</th>
             <th>Issue</th>
+            <th>Return</th>
+           
           </tr>
       {% for equi in equipments %}
       <tr>
-        <td>{{equi.id}}</td>
+        <td></td>
         <td>{{equi.name}}</td>
         <td>{{equi.total_quantity}}</td>
         <td>{{equi.available_quantity}}</td>
         <td><a href="{% url 'equipmentDelete' pk=pk id=equi.id %}"><button>delete</button></a></td>
         <td><a href="{% url 'Issue' pk=pk id=equi.id %}"><button>Issue</button></a></td>
+        <td><a href="{% url 'Return' pk=pk id=equi.id %}"><button>Return</button></td>
       </tr>
     {% endfor %}
 </table>

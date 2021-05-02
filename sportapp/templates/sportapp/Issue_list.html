@@ -101,6 +101,7 @@ right: 10px;
 
 <div class="sidenav">
     <a href="{% url 'clubsList' %}">Secys</a>
+    <a href="{% url 'superindent' %}">Superindent</a>
     {% if clubs_list %}
     {% for club in clubs_list %}
   <button class="dropdown-btn">{{club.name}} 
@@ -122,16 +123,44 @@ right: 10px;
     {% if issue_list %}
     <table style="width:100%">
         <tr>
-
-            <th>Name</th>
+          <th>student name</th>
+          <th>roll number</th>
+            <th>equipment Name</th>
             <th>Quantity</th>
             <th>Date of Issue</th>
+        
+            <th>status</th>
+            
           </tr>
       {% for obj in issue_list %}
       <tr>
+        <td>{{obj.name}}</td>
+        <td>{{obj.roll}}</td>
         <td>{{obj.equipment_name}}</td>
         <td>{{obj.quantity}}</td>
         <td>{{obj.date}}</td>
+        {% if obj.is_return  %}        
+        {% if obj.is_pending %}
+        <td>return request pending</td>
+        {% else %}
+        {% if obj.req%}
+        <td>returned</td>
+        {%else%}
+        <td>return denied</td>
+        {% endif %}
+        {% endif %}
+        {% else %}
+        {% if obj.is_pending %}
+        <td>issue request pending</td>
+        {% else %}
+        {%if obj.req%}
+       <td> issued</td>
+       {%else%}
+       <td>issue denied</td>
+       {%endif%}
+        {% endif %}
+        {% endif %}
+      
         
       </tr>
     {% endfor %}

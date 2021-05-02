@@ -17,3 +17,7 @@ class IssueForm(forms.ModelForm):
     class Meta:
         model=issue
         fields=['roll','name','quantity']
+class ReturnForm(forms.ModelForm):
+    class Meta:
+        model=issue
+        fields=['roll','name','quantity']
