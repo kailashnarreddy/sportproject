@@ -120,11 +120,12 @@ def IssueListView(request,pk):
     equipments=club.equipment_set.all()
     tot_list=issue.objects.all()
     issue_list=[]
+    
     for equip in equipments:
         for o in tot_list:
             if (str(o.equipment_name) == str(equip.name)):
                 issue_list.append(o)
-              
+    issue_list.reverse()          
     context = {
              'clubs_list': clubs_list,
              'pk': pk,
