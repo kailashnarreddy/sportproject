@@ -24,7 +24,7 @@ class equipment(models.Model):
     total_quantity= models.IntegerField(null=True)
     available_quantity=models.IntegerField(null=True)
     sport= models.ForeignKey('clubs', on_delete=models.CASCADE)
-    
+    specification=models.TextField(null=True)
 
     def __str__(self):
         return self.name      

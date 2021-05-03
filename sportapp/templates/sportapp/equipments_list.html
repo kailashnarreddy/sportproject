@@ -139,6 +139,7 @@ right: 10px;
         <tr>
             <th>sno</th>
             <th>Name</th>
+            <th>Specificaton</th>
             <th>Total Quantity</th>
             <th>Available Quantity</th>
             <th>Delete</th>
@@ -150,6 +151,7 @@ right: 10px;
       <tr>
         <td></td>
         <td>{{equi.name}}</td>
+        <td>{{equi.specification}}</td>
         <td>{{equi.total_quantity}}</td>
         <td>{{equi.available_quantity}}</td>
         <td><a href="{% url 'equipmentDelete' pk=pk id=equi.id %}"><button>delete</button></a></td>

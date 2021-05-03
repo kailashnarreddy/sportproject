@@ -11,7 +11,7 @@ class ClubForm(forms.ModelForm):
 class EquipmentForm(forms.ModelForm):
     class Meta:
         model=equipment
-        fields=['name','total_quantity']
+        fields=['name','total_quantity','specification']
 
 class IssueForm(forms.ModelForm):
     class Meta:
