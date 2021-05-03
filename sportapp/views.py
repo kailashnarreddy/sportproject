@@ -16,6 +16,13 @@ def Index(request):
     context = {
             'clubs_list':clubs_list,
         }
+    user = request.user
+    print(user)
+    print(user.username)
+    print(user.email)
+    print(type(user))
+    print(type(user.username))
+    print(type(user.email))
     return render(request,'sportapp/home.html',context)
     
 
@@ -154,10 +161,14 @@ def returnequipment(request,pk,id):
     return render(request, 'sportapp/return_form.html', context)    
 
 def superindent(request):
-    iss=issue.objects.filter(is_pending=True)
-    print(iss)
-    context={'iss':iss}
-    return render(request,'sportapp/superindent.html',context)
+    user = request.user
+    if user.email=="n.kailash@iitg.ac.in":
+        iss=issue.objects.filter(is_pending=True)
+        print(iss)
+        context={'iss':iss}
+        return render(request,'sportapp/superindent.html',context)
+    else:
+        return redirect('Home')
 def accept(request,pk):
     issue.objects.filter(pk=pk).update(is_pending=False,req=True)
     isl=issue.objects.get(pk=pk)
