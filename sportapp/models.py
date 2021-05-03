@@ -33,7 +33,7 @@ class issue(models.Model):
     equipment_name= models.ForeignKey('equipment',on_delete=models.CASCADE, null=True)
     roll= models.CharField(max_length=30) 
     name=  models.CharField(max_length=50)
-    quantity= models.IntegerField(null=True)
+    quantity= models.PositiveIntegerField(null=True)
     date= models.DateTimeField(auto_now=True)
     is_return= models.BooleanField(default=False)
     is_pending= models.BooleanField(default=True)

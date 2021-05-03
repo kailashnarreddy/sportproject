@@ -1,5 +1,19 @@
 <form method='post'>
     {% csrf_token %}
-    {{form.as_p}}
+     <div>
+     Rollnumber:
+     {{form.roll}}
+     </div>
+     <br>
+     <div>
+     Name:
+    {{form.name}}
+    </div>
+    <br>
+    <div>
+    Quantity:
+    <input type="number" name="quantity" min="0" max="{{ maximum_value }}">
+    <div>
+    <br>
     <input type="submit" value = "submit">
 </form>

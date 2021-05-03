@@ -92,21 +92,23 @@ def IssueFormView(request,pk,id):
 
         form = IssueForm(request.POST)
         if form.is_valid():
-            post = form.save(commit=False)
-            if post.quantity > equip.available_quantity:
-                return HttpResponse('Cannot be issued')
-            else:   
-                quantity = equip.available_quantity-post.quantity
-                post.equipment_name= equipment.objects.get(id=id)
+         post = form.save(commit=False)
+            # if post.quantity > equip.available_quantity:
+            #     return HttpResponse('Cannot be issued')
+            # else:   
+         quantity = equip.available_quantity-post.quantity
+         post.equipment_name= equipment.objects.get(id=id)
                
-                post.save()
-                print(quantity,23)
-            return redirect('IssueList',pk=pk)  
+         post.save()
+            
+         return redirect('IssueList',pk=pk)  
 
     else:
+        equip=get_object_or_404(equipment, id=id)
         form = IssueForm()
         context = {
             'form':form,
+            'maximum_value':equip.available_quantity
         }
     return render(request, 'sportapp/Issue.html', context)      
 
@@ -134,19 +136,19 @@ def returnequipment(request,pk,id):
     if request.method == 'POST':
         eq=get_object_or_404(equipment,pk=id)
         form = ReturnForm(request.POST)
+        quan=request.POST.get('quantity')
         if form.is_valid():
             post = form.save(commit=False)
-          
-            
-            
-            iss=issue(name=post.name,equipment_name=eq,roll=post.roll,quantity=post.quantity,is_return=True)
+            iss=issue(name=post.name,equipment_name=eq,roll=post.roll,quantity=quan,is_return=True)
             iss.save()
             return redirect('IssueList',pk=pk)  
 
     else:
         form = ReturnForm()
+        eq=get_object_or_404(equipment,pk=id)
         context = {
             'form':form,
+            'maximum_value':eq.total_quantity-eq.available_quantity
         }
     return render(request, 'sportapp/return_form.html', context)    
 
