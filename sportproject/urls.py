@@ -18,6 +18,7 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('sportapp/', include('sportapp.urls')),
-
+    path('', include('sportapp.urls')),
+    path('oauth2/', include('django_auth_adfs.urls')),
+    
 ]

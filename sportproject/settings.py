@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sportapp.apps.SportappConfig',
+     'django_auth_adfs',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_auth_adfs.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'sportproject.urls'
@@ -100,7 +102,32 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+client_id = 'f255b4e6-8d58-4b00-8dea-c91dc3352442'
+client_secret = 'c-1ED_-Y_cpimWk9V~MCSx465T3M5e9-Tg'
+tenant_id = '850aa78d-94e1-4bc6-9cf3-8c11b530701c'
 
+
+AUTHENTICATION_BACKENDS = (
+    'django_auth_adfs.backend.AdfsAuthCodeBackend',
+    'django_auth_adfs.backend.AdfsAccessTokenBackend',
+)
+
+AUTH_ADFS = {
+    'AUDIENCE' : client_id,
+    'CLIENT_ID': client_id,
+    'CLIENT_SECRET': client_secret,
+    'CLAIM_MAPPING': {'first_name': 'given_name',
+                      'last_name': 'family_name',
+                      'email': 'upn'},
+    'GROUPS_CLAIM': 'roles',
+    'MIRROR_GROUPS': True,
+    'USERNAME_CLAIM': 'upn',
+    'TENANT_ID': tenant_id,
+    'RELYING_PARTY_ID': client_id,
+    'LOGIN_EXEMPT_URLS':[],
+}
+LOGIN_URL = "django_auth_adfs:login"
+LOGIN_REDIRECT_URL = "/"
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -114,7 +141,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+CUSTOM_FAILED_RESPONSE_VIEW = 'dot.path.to.custom.views.login_failed'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
