@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: green;
+  color: white;
+}
+tr td:first-child:before
+{
+  counter-increment: Serial;      /* Increment the Serial counter */
+  content: "" counter(Serial); /* Display the counter */
+}
+body
+{
+    counter-reset: Serial;           /* Set the Serial counter to 0 */
+}
+table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+
+th, td {
+     
+     padding: 5px;
+      text-align: left;    
+    }    
+
+    .myButton {
+
+padding: 10px;
+display:block;
+background-color: green;
+color: white;
+text-align:center;
+position: absolute;
+top: 10px;
+right: 10px;
+
+}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
+  <a class='active' href="{% url 'Secy'  %}">Register stock</a>
+  <a href="{% url 'SecyIssueList'  %}">Issue History</a>
+</div>
+
+<div style="padding-left:16px">
+    <a href="{% url 'SecyEquipments' club.pk %}" class="myButton">Add Equipments</a>
+    <h1>
+        Equipments list
+    </h1>
+    {% if equipments %}
+    <table style="width:100%">
+        <tr>
+            <th>sno</th>
+            <th>Name</th>
+            <th>Specificaton</th>
+            <th>Total Quantity</th>
+            <th>Available Quantity</th>
+            <th>Delete</th>
+            <th>Issue</th>
+            <th>Return</th>
+           
+          </tr>
+      {% for equi in equipments %}
+      <tr>
+        <td></td>
+        <td>{{equi.name}}</td>
+        <td>{{equi.specification}}</td>
+        <td>{{equi.total_quantity}}</td>
+        <td>{{equi.available_quantity}}</td>
+        <td><a href="{% url 'SecyequipmentDelete' pk=club.pk id=equi.id %}"><button>delete</button></a></td>
+        <td><a href="{% url 'SecyIssue' pk=club.pk id=equi.id %}"><button>Issue</button></a></td>
+        <td><a href="{% url 'SecyReturn' pk=club.pk id=equi.id %}"><button>Return</button></td>
+      </tr>
+    {% endfor %}
+</table>
+  {% else %}
+    <p>There are no Equipments </p>
+  {% endif %} 
+</div>
+
+</body>
+</html>

@@ -5,7 +5,9 @@ from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib import messages
 from .forms import *
 from .models import *
-from django.http import HttpResponse
+from django.http import HttpResponse,Http404
+
+
 
 
 # Create your views here.
@@ -23,8 +25,16 @@ def Index(request):
     print(type(user))
     print(type(user.username))
     print(type(user.email))
-    return render(request,'sportapp/home.html',context)
-    
+    if user.email=="":
+        return render(request,'sportapp/home.html',context)
+    else:
+        clubs_list=clubs.objects.all()
+        for club in clubs_list:
+            if (str(club.email)==str(user.email)):
+                return render(request,'sportapp/Secy_home.html',context)
+
+       
+    raise Http404("Page does not exist")
 
 
 def ClubsView(request):
@@ -105,9 +115,8 @@ def IssueFormView(request,pk,id):
             # else:   
          quantity = equip.available_quantity-post.quantity
          post.equipment_name= equipment.objects.get(id=id)
-               
          post.save()
-            
+
          return redirect('IssueList',pk=pk)  
 
     else:
@@ -140,6 +149,7 @@ def IssueListView(request,pk):
             'equipments':equipments,
         }
     return render(request, 'sportapp/Issue_list.html', context)
+
 def returnequipment(request,pk,id):
     if request.method == 'POST':
         eq=get_object_or_404(equipment,pk=id)
@@ -162,13 +172,14 @@ def returnequipment(request,pk,id):
 
 def superindent(request):
     user = request.user
-    if user.email=="n.kailash@iitg.ac.in":
+    if user.email=="prathapa@iitg.ac.in":
         iss=issue.objects.filter(is_pending=True)
         print(iss)
         context={'iss':iss}
         return render(request,'sportapp/superindent.html',context)
     else:
         return redirect('Home')
+
 def accept(request,pk):
     issue.objects.filter(pk=pk).update(is_pending=False,req=True)
     isl=issue.objects.get(pk=pk)
@@ -181,15 +192,137 @@ def accept(request,pk):
         equipment.objects.filter(pk=ik).update(available_quantity=eq.available_quantity+isl.quantity)    
 
     return redirect('superindent')
+
 def deny(request,pk):
      issue.objects.filter(pk=pk).update(is_pending=False)
-    
-     
      return redirect('superindent')
+
+
+def secyEquipments(request):
+    user = request.user
+    clubs_list=clubs.objects.all()
+    for club in clubs_list:
+        if (str(club.email)==str(user.email)):
+            club=clubs.objects.get(pk=club.pk)
+            equipments=club.equipment_set.all()
+            tot_list=issue.objects.all()
+            issue_list=[]
+            for equip in equipments:
+                for o in tot_list:
+                    if (str(o.equipment_name) == str(equip.name)):
+                        issue_list.append(o)
+
+            context = {
+            'issue_list':issue_list,
+            'equipments':equipments,
+            'pk':club.pk,
+            'club':club,
+            }     
+            return render(request, 'sportapp/secy.html', context)   
+
+    raise Http404("Page does not exist")
+
+
+def secyIssueList(request):
+    user = request.user
+    clubs_list=clubs.objects.all()
+    for club in clubs_list:
+        if (str(club.email)==str(user.email)):
+            club=clubs.objects.get(pk=club.pk)
+            equipments=club.equipment_set.all()
+            tot_list=issue.objects.all()
+            issue_list=[]
+            for equip in equipments:
+                for o in tot_list:
+                    if (str(o.equipment_name) == str(equip.name)):
+                        issue_list.append(o)
+
+            context = {
+            'issue_list':issue_list,
+            'equipments':equipments,
+            'club':club,
+            }     
+            return render(request, 'sportapp/secy_issue.html', context)   
+
+    raise Http404("Page does not exist")
+
+
+    
+
+def SecyEquipmentView(request,pk):
+    if request.method == 'POST':
+        form = EquipmentForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.available_quantity=post.total_quantity
+            post.sport=clubs.objects.get(pk=pk)
+            post.save()
+            messages.success(request,f'Your Equipment has been saved!')
+            return redirect('Secy')
+    else:
+            
+        form = EquipmentForm()
+        context = {
+            'form':form,
+        }
+    return render(request, 'sportapp/add_equipment.html', context)               
+
+def SecyIssueFormView(request,pk,id):
+    equip=get_object_or_404(equipment, id=id)
+    if request.method == 'POST':
+
+        form = IssueForm(request.POST)
+        if form.is_valid():
+         post = form.save(commit=False)
+            # if post.quantity > equip.available_quantity:
+            #     return HttpResponse('Cannot be issued')
+            # else:   
+         quantity = equip.available_quantity-post.quantity
+         post.equipment_name= equipment.objects.get(id=id)
+         post.save()
+
+         return redirect('SecyIssueList')  
+
+    else:
+        equip=get_object_or_404(equipment, id=id)
+        form = IssueForm()
+        context = {
+            'form':form,
+            'maximum_value':equip.available_quantity
+        }
+    return render(request, 'sportapp/Issue.html', context)      
+
+def SecyDeleteEquipmentView(request,id,pk):
+    a=equipment.objects.filter(id=id)
+    a.delete()
+    return redirect('Secy')
+         
+def Secyreturnequipment(request,pk,id):
+    if request.method == 'POST':
+        eq=get_object_or_404(equipment,pk=id)
+        form = ReturnForm(request.POST)
+        quan=request.POST.get('quantity')
+        if form.is_valid():
+            post = form.save(commit=False)
+            iss=issue(name=post.name,equipment_name=eq,roll=post.roll,quantity=quan,is_return=True)
+            iss.save()
+            return redirect('SecyIssueList')  
+
+    else:
+        form = ReturnForm()
+        eq=get_object_or_404(equipment,pk=id)
+        context = {
+            'form':form,
+            'maximum_value':eq.total_quantity-eq.available_quantity
+        }
+    return render(request, 'sportapp/return_form.html', context)             
 
 class TotalListView(ListView):
     model=issue
     template_name='sportapp/Total_list.html'
+
+
+
 
 
 
