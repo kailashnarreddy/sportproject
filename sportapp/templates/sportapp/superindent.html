@@ -3,11 +3,8 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../../static/style.css">
 <style>
-body {
-  font-family: "Lato", sans-serif;
-}
-
 /* Fixed sidenav, full height */
 .sidenav {
   height: 100%;
@@ -72,29 +69,7 @@ body {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
-table, th, td {
-      border: 1px solid black;
-      border-collapse: collapse;
-    }
 
-th, td {
-     
-     padding: 5px;
-      text-align: left;    
-    }    
-
-    .myButton {
-
-padding: 10px;
-display:block;
-background-color: green;
-color: white;
-text-align:center;
-position: absolute;
-top: 10px;
-right: 10px;
-
-}
 </style>
 </head>
 <body>
@@ -118,7 +93,8 @@ right: 10px;
 <div class="main">
     
     {% if iss %}
-    <table style="width:100%">
+    <table style="width:100%" class="styled-table">
+      <thead>
         <tr>
           <th>student name</th>
           <th>roll number</th>
@@ -129,6 +105,8 @@ right: 10px;
             <th>accept</th>
             <th>deny</th>
           </tr>
+      </thead>
+      <tbody>
       {% for obj in iss %}
       <tr>
         <tr>
@@ -142,10 +120,11 @@ right: 10px;
         {%else%}
         <td>issue request</td>
         {% endif %}
-        <td><a href="{% url 'accept' obj.pk %}"><button>accept</button></td>
-        <td><a href="{% url 'deny' obj.pk %}"><button>deny</button></td>        
+        <td><a href="{% url 'accept' obj.pk %}"><button class="greenb">accept</button></td>
+        <td><a href="{% url 'deny' obj.pk %}"><button class="redb">deny</button></td>        
       </tr>
     {% endfor %}
+  </tbody>
 </table>
   {% else %}
     <p>There are no Issue_Equipments </p>
@@ -172,3 +151,4 @@ for (i = 0; i < dropdown.length; i++) {
 
 </body>
 </html> 
+

@@ -1,0 +1,113 @@
+*{
+    font-family: 'Quicksand',sans-serif;
+}
+
+.myButton {
+    color:white;
+    background-color: #009879;
+    text-align:center;
+    text-decoration: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    display: block;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    width: 200px;
+    height: 20px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background-size: 100% 100%;
+    margin-bottom: 10px;
+}
+
+.greenb{
+    background-color:  #009879;
+    border: 2px black;
+    border-radius: 20px;
+    color: white;
+    padding: 2px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+.redb{
+    background-color:   #f44336;;
+    border: 2px black;
+    border-radius: 20px;
+    color: white;
+    padding: 2px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+
+}
+.grayb{
+    background-color: #c2c2c2;
+    color: black;;
+    border: 2px black;
+    border-radius: 20px;
+    padding: 2px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+
+}
+  
+  
+
+h1{
+    font-family: "Trebuchet MS", sans-serif;
+    font-size: 2em;
+    font-weight:700;
+    letter-spacing: 0px;
+    border-bottom: 2px solid black;
+    text-transform: uppercase;
+}
+
+
+.styled-table{
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    border-color:black;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    white-space: normal;
+    line-height: normal;
+}
+
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: thin  solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
