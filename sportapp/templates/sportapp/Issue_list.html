@@ -123,6 +123,7 @@ right: 10px;
     {% if issue_list %}
     <table style="width:100%">
         <tr>
+          <th>S. No</th>
           <th>student name</th>
           <th>roll number</th>
             <th>equipment Name</th>
@@ -134,6 +135,7 @@ right: 10px;
           </tr>
       {% for obj in issue_list %}
       <tr>
+         <th>{{obj.pk}}</th>
         <td>{{obj.name}}</td>
         <td>{{obj.roll}}</td>
         <td>{{obj.equipment_name}}</td>
