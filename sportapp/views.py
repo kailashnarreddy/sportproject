@@ -25,7 +25,7 @@ def Index(request):
     print(type(user))
     print(type(user.username))
     print(type(user.email))
-    if user.email=="kpatel@iitg.ac.in":
+    if user.email=="n.kailash@iitg.ac.in":
         return render(request,'sportapp/home.html',context)
     else:
         clubs_list=clubs.objects.all()
@@ -172,7 +172,7 @@ def returnequipment(request,pk,id):
 
 def superindent(request):
     user = request.user
-    if user.email=="kpatel@iitg.ac.in":
+    if user.email=="patnana.sai@iitg.ac.in":
         iss=issue.objects.filter(is_pending=True)
         print(iss)
         context={'iss':iss}

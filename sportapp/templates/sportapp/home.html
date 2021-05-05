@@ -77,7 +77,7 @@ body {
 <body>
 
 <div class="sidenav">
-   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
+   
     <a href="{% url 'clubsList' %}">Secys</a>
     <a href="{% url 'superindent' %}">Superindent</a>
     {% if clubs_list %}
@@ -91,7 +91,7 @@ body {
   </div>
   {% endfor %}   
   {% endif %}
- 
+  <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
 </div>
 
 <div class="main">
