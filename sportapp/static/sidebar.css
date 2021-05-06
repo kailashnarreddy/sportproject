@@ -1,0 +1,106 @@
+
+/* Fixed sidenav, full height */
+.sidenav {
+    height: 100%;
+    width: 195px;
+    position: fixed;
+    border:4px solid #009879;
+    border-radius: 22px ;
+    z-index: 1;
+    top: 5px;
+    left: 5px;
+    background-color:black;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+  
+  .sidenav a{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color:black;
+    display: block;
+    background: none; 
+    background-color:  #009879  ;
+    width: 90%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .dropdown-btn {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color:black;
+    display: block;
+    background: none; 
+    background-color:  #009879;
+    border-top-right-radius:10px;
+    border-bottom-right-radius:10px;
+    width: 90%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  
+  /* On mouse-over */
+  .sidenav a:hover, .dropdown-btn:hover {
+    color: #f1f1f1;
+  }
+  
+  /* Main content */
+  .main {
+    margin-left: 200px; /* Same as the width of the sidenav */
+    font-size: 20px; /* Increased text to enable scrolling */
+    padding: 0px 10px;
+  }
+  
+  /* Add an active class to the active dropdown button */
+  .active {
+    background-color:teal;
+    color: white;
+  }
+  
+  /* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+  .dropdown-container {
+    display: none;
+    background-color: #262626;
+    padding-left: 8px;
+  }
+  .dropdown-container a{
+    background-color:rgb(180, 206, 129);
+    border-top-left-radius:10px;
+    border-bottom-left-radius:10px;
+
+  }
+  .dropdown-container a:hover{
+    color:darkblue;
+  }
+  
+  /* Optional: Style the caret down icon */
+  .fa-caret-down {
+    float: right;
+    padding-right: 8px;
+  }
+  
+  /* Some media queries for responsiveness */
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+
+  tr td:first-child:before
+{
+  counter-increment: Serial;      /* Increment the Serial counter */
+  content: "" counter(Serial); /* Display the counter */
+}
+body
+{
+    counter-reset: Serial;           /* Set the Serial counter to 0 */
+}
