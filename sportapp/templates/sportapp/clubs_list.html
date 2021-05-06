@@ -35,8 +35,11 @@
         <table style="width:100%" class="styled-table" >
           <thead>
             <tr>
+              <th>sno</th>
               <th>Name</th>
               <th>Secy Name</th>
+              <th>Program</th>
+              <th>Department</th>
               <th>Email id</th>
               <th>Edit</th>
             </tr>
@@ -44,8 +47,11 @@
           <tbody>
             {% for club in clubs_list %}
             <tr>
+              <td></td>
               <td>{{club.name}}</td>
               <td>{{club.secy_name}}</td>
+              <td>{{club.prog}}</td>
+              <td>{{club.dept}}</td>
               <td>{{club.email}}</td>
               <td><a href="{% url 'editClub' club.pk %}"><button class="grayb">Edit</button></a></td>
             </tr>

@@ -23,7 +23,7 @@
   </div>
   {% endfor %}   
   {% endif %}
-  <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
+ 
 </div>
 
 <div class="main">
@@ -39,8 +39,9 @@
             <th>equipment Name</th>
             <th>Quantity</th>
             <th>Date of Issue</th>
-        
+            <th>remark</th>
             <th>status</th>
+            
             
         </tr>
       </thead>
@@ -52,6 +53,7 @@
         <td>{{obj.equipment_name}}</td>
         <td>{{obj.quantity}}</td>
         <td>{{obj.date}}</td>
+        <td>{{obj.remark}}</td>
         {% if obj.is_return  %}        
         {% if obj.is_pending %}
         <td>return request pending</td>

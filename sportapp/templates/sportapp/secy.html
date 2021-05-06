@@ -68,10 +68,9 @@ right: 10px;
 <body>
 
 <div class="topnav">
- 
+  <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
   <a class='active' href="{% url 'Secy'  %}">Register stock</a>
   <a href="{% url 'SecyIssueList'  %}">Issue History</a>
-  <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
 </div>
 
 <div style="padding-left:16px">

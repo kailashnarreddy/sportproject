@@ -11,10 +11,15 @@
  
 <div class="sidenav">
     <a href="{% url 'clubsList' %}">Secys</a>
+    <a href="{% url 'superindent' %}">Superindent</a>
     {% if clubs_list %}
     {% for club in clubs_list %}
+   
   <button class="dropdown-btn">{{club.name}} 
     <i class="fa fa-caret-down"></i>
+    </button>
+   
+
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
@@ -26,44 +31,44 @@
 </div>
 
 <div class="main">
-    
-    {% if iss %}
+    <a href="{% url 'addgeneral' %}" class="myButton">Add Equipments</a>
+    <h1>
+        General Equipments list
+    </h1>
+    {% if equipments %}
     <table style="width:100%" class="styled-table">
       <thead>
         <tr>
-          <th>student name</th>
-          <th>roll number</th>
-            <th>equipment Name</th>
-            <th>Quantity</th>
-            <th>Date</th>
-            <th>status</th>
-            <th>accept</th>
-            <th>deny</th>
-          </tr>
+            <th>sno</th>
+            <th>Name</th>
+            <th>Specificaton</th>
+            <th>Total Quantity</th>
+            <th>Available Quantity</th>
+            <th>Delete</th>
+            <th>Issue</th>
+            <th>Return</th>
+           
+        </tr>
       </thead>
       <tbody>
-      {% for obj in iss %}
+      {% for equi in equipments %}
       <tr>
-        <tr>
-        <td>{{obj.name}}</td>
-        <td>{{obj.roll}}</td>
-        <td>{{obj.equipment_name}}</td>
-        <td>{{obj.quantity}}</td>
-        <td>{{obj.date}}</td>
-        {% if obj.is_return%}
-        <td>return request</td>
-        {%else%}
-        <td>issue request</td>
-        {% endif %}
-        <td><a href="{% url 'accept' obj.pk %}"><button class="greenb">accept</button></td>
-        <td><a href="{% url 'deny' obj.pk %}"><button class="redb">deny</button></td>        
+        <td></td>
+        <td>{{equi.name}}</td>
+        <td>{{equi.specification}}</td>
+        <td>{{equi.total_quantity}}</td>
+        <td>{{equi.available_quantity}}</td>
+        <td><a href="#"><button class="redb" >delete</button></a></td>
+        <td><a href="{% url 'generalissue' equi.pk %}"><button class="grayb">Issue</button></a></td>
+        <td><a href="#"><button class="grayb">Return</button></td>
       </tr>
-    {% endfor %}
-  </tbody>
+      {% endfor %}
+      </tbody>
 </table>
   {% else %}
-    <p>There are no Issue_Equipments </p>
+    <p>There are no Equipments </p>
   {% endif %} 
+
 </div>
 
 <script src="../../static/sidebar.js">
