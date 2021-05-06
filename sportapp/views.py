@@ -172,7 +172,7 @@ def returnequipment(request,pk,id):
 
 def superindent(request):
     user = request.user
-    if user.email=="patnana.sai@iitg.ac.in":
+    if user.email=="bkartheek@iitg.ac.in":
         iss=issue.objects.filter(is_pending=True)
         print(iss)
         context={'iss':iss}
