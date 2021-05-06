@@ -25,7 +25,7 @@ def Index(request):
     print(type(user))
     print(type(user.username))
     print(type(user.email))
-    if user.email=="n.kailash@iitg.ac.in":
+    if user.email=="bteja@iitg.ac.in":
         return render(request,'sportapp/home.html',context)
     else:
         clubs_list=clubs.objects.all()
@@ -38,6 +38,7 @@ def Index(request):
 
 
 def ClubsView(request):
+    
     if request.method == 'POST':
         form = ClubForm(request.POST)
         if form.is_valid():
@@ -47,17 +48,44 @@ def ClubsView(request):
             return redirect('clubsList')
 
     else:
-
         form = ClubForm()
         context = {
             'form':form,
         }
     return render(request, 'sportapp/add_club.html', context)   
+    
+def UpdateClubsView(request,pk):
+    if request.method == 'POST':
+        form1 = ClubForm(request.POST)
+        if form1.is_valid():
+            form=form1.save(commit=False)
+            clubs.objects.filter(pk=pk).update(name=form.name,secy_name=form.secy_name,email=form.email,dept=form.dept,prog=form.prog)
+            return redirect('clubsList')
 
-class UpdateClubView(UpdateView):
-    model = clubs
-    fields = ['name','secy_name','email']
-    template_name = 'sportapp/add_club.html'    
+    else:
+        club=clubs.objects.get(pk=pk)
+        dict={
+            "name":club.name,
+            "secy_name":club.secy_name,
+            "email":club.email,
+            "dept":club.dept,
+            "prog":club.prog
+        }
+        form = ClubForm(initial=dict)
+        context = {
+            'form':form,
+        }
+    return render(request, 'sportapp/add_club.html', context)   
+
+# class UpdateClubView(UpdateView):
+#     departments=[('CSE','CSE'),('MNC','MNC'),('EEE','EEE'),('ECE','ECE'),('CL','CL'),('CST','CST'),('EP','EP'),('BT','BT'),('MECH','MECH'),('CIVIL','CIVIL'),('others','others')]
+#     programs=[('BTECH','BTECH'),('MTECH','MTECH'),('B.DES','B.DES'),('M.DES','M.DES'),('PhD','PhD'),('M.S.(R)','M.S.(R)'),('M.A.','M.A.'),('M.Sc.','M.Sc.'),('others','others')]
+#     dept=forms.CharField(widget=forms.Select(choices=departments))
+#     prog=forms.CharField(widget=forms.Select(choices=programs))
+#     model=clubs
+#     fields = '__all__'
+#     template_name = 'sportapp/add_club.html'
+        
 
 class ClubsListView(ListView):
     model = clubs
@@ -83,6 +111,7 @@ def EquipmentView(request,pk):
         
            
 def EquipmentListView(request,pk):
+
     clubs_list=clubs.objects.all()
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
@@ -172,9 +201,8 @@ def returnequipment(request,pk,id):
 
 def superindent(request):
     user = request.user
-    if user.email=="bkartheek@iitg.ac.in":
+    if user.email=="bteja@iitg.ac.in":
         iss=issue.objects.filter(is_pending=True)
-        print(iss)
         context={'iss':iss}
         return render(request,'sportapp/superindent.html',context)
     else:
@@ -320,6 +348,46 @@ def Secyreturnequipment(request,pk,id):
 class TotalListView(ListView):
     model=issue
     template_name='sportapp/Total_list.html'
+
+def general(request):
+    clubs_list=clubs.objects.all()
+    equipments=generalequipment.objects.all()
+    context = {
+             'clubs_list': clubs_list,
+            'equipments':equipments,
+        }
+    return render(request,'sportapp/general.html',context)
+def addgeneral(request):
+    if request.method == 'POST':
+        form = generalequipmentform(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.available_quantity=post.total_quantity
+            post.save()
+            return redirect('general')
+    else:       
+        form = generalequipmentform()
+        context = {
+            'form':form,
+        }
+    return render(request, 'sportapp/add_equipment.html', context)
+def generalissue(request,pk):
+    equip=get_object_or_404(generalequipment, pk=pk)
+    if request.method == 'POST':
+        form = IssueForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)  
+            quantity = equip.available_quantity-post.quantity
+            post.equipment_name= generalequipment.objects.get(id=id)
+            post.save()
+            return redirect('general')  
+    else:
+        form = IssueForm()
+        context = {
+            'form':form,
+            'maximum_value':equip.available_quantity
+        }
+    return render(request, 'sportapp/Issue.html', {'form':form,'maximum_value':equip.available_quantity})      
 
 
 
