@@ -30,7 +30,8 @@ class equipment(models.Model):
         return self.name      
 
 class issue(models.Model):
-    equipment_name= models.ForeignKey('equipment',on_delete=models.CASCADE, null=True)
+    equipment_name= models.ForeignKey('equipment',on_delete=models.CASCADE,null=True,default=None)
+    general_equipname=models.ForeignKey('generalequipment',on_delete=models.CASCADE, null=True,default=None)
     roll= models.CharField(max_length=30) 
     name=  models.CharField(max_length=50)
     quantity= models.PositiveIntegerField(null=True)
@@ -38,9 +39,13 @@ class issue(models.Model):
     is_return= models.BooleanField(default=False)
     is_pending= models.BooleanField(default=True)
     req=models.BooleanField(default=False)
-    remark=models.TextField(null=True)
+    remark=models.TextField(null=True,default=None)
+      
+    
+
+   
     class Meta:
-        ordering = ['date']
+     ordering = ['date']
 class generalequipment(models.Model):
     name = models.CharField(max_length=30)
     total_quantity= models.IntegerField(null=True)

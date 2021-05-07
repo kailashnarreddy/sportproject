@@ -7,7 +7,7 @@ from .forms import *
 from .models import *
 from django.http import HttpResponse,Http404
 
-
+from datetime import datetime
 
 
 # Create your views here.
@@ -19,13 +19,8 @@ def Index(request):
             'clubs_list':clubs_list,
         }
     user = request.user
-    print(user)
-    print(user.username)
-    print(user.email)
-    print(type(user))
-    print(type(user.username))
-    print(type(user.email))
-    if user.email=="bteja@iitg.ac.in":
+  
+    if user.email=="n.kailash@iitg.ac.in":
         return render(request,'sportapp/home.html',context)
     else:
         clubs_list=clubs.objects.all()
@@ -134,18 +129,18 @@ def deleteEquipmentView(request,id,pk):
 
 def IssueFormView(request,pk,id):
     equip=get_object_or_404(equipment, id=id)
+   
     if request.method == 'POST':
 
         form = IssueForm(request.POST)
         if form.is_valid():
          post = form.save(commit=False)
-            # if post.quantity > equip.available_quantity:
-            #     return HttpResponse('Cannot be issued')
-            # else:   
+            
          quantity = equip.available_quantity-post.quantity
-         post.equipment_name= equipment.objects.get(id=id)
+         post.equipment_name= equip
+         post.remark=None
          post.save()
-
+        
          return redirect('IssueList',pk=pk)  
 
     else:
@@ -155,7 +150,7 @@ def IssueFormView(request,pk,id):
             'form':form,
             'maximum_value':equip.available_quantity
         }
-    return render(request, 'sportapp/Issue.html', context)      
+        return render(request, 'sportapp/Issue.html', context)      
 
 
 
@@ -164,13 +159,15 @@ def IssueListView(request,pk):
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
     tot_list=issue.objects.all()
+   
     issue_list=[]
     
     for equip in equipments:
         for o in tot_list:
-            if (str(o.equipment_name) == str(equip.name)):
+            if str(o.equipment_name) == str(equip.name):
                 issue_list.append(o)
-    issue_list.reverse()          
+    issue_list.reverse()  
+          
     context = {
              'clubs_list': clubs_list,
              'pk': pk,
@@ -186,6 +183,7 @@ def returnequipment(request,pk,id):
         quan=request.POST.get('quantity')
         if form.is_valid():
             post = form.save(commit=False)
+            post.remark=None
             iss=issue(name=post.name,equipment_name=eq,roll=post.roll,quantity=quan,is_return=True)
             iss.save()
             return redirect('IssueList',pk=pk)  
@@ -197,34 +195,64 @@ def returnequipment(request,pk,id):
             'form':form,
             'maximum_value':eq.total_quantity-eq.available_quantity
         }
-    return render(request, 'sportapp/return_form.html', context)    
+        return render(request, 'sportapp/return_form.html', context)    
 
 def superindent(request):
     user = request.user
-    if user.email=="bteja@iitg.ac.in":
+    if user.email=="n.kailash@iitg.ac.in":
         iss=issue.objects.filter(is_pending=True)
+    
         context={'iss':iss}
         return render(request,'sportapp/superindent.html',context)
     else:
         return redirect('Home')
 
 def accept(request,pk):
-    issue.objects.filter(pk=pk).update(is_pending=False,req=True)
+   if request.method=='POST': 
+    form=remarkform(request.POST)
+    if form.is_valid:
+        post=form.save(commit=False)
+    issue.objects.filter(pk=pk).update(is_pending=False,req=True,date=datetime.now(),remark=post.remark)
     isl=issue.objects.get(pk=pk)
-    ik=isl.equipment_name.id
-    eq=equipment.objects.get(pk=ik)
-    if isl.is_return==False:
-        equipment.objects.filter(pk=ik).update(available_quantity=eq.available_quantity-isl.quantity)
     
-    if isl.is_return==True:
-        equipment.objects.filter(pk=ik).update(available_quantity=eq.available_quantity+isl.quantity)    
+    
+    if isl.equipment_name:
+       ik=isl.equipment_name.id
+       eq=equipment.objects.get(pk=ik)
+       if isl.is_return==False:
+        equipment.objects.filter(pk=ik).update(available_quantity=eq.available_quantity-isl.quantity)
+        
+       if isl.is_return==True:
+        equipment.objects.filter(pk=ik).update(available_quantity=eq.available_quantity+isl.quantity)
+    else :
+       ik=isl.general_equipname.id 
+       eq=generalequipment.objects.get(pk=ik)  
+       if isl.is_return==False:
+        generalequipment.objects.filter(pk=ik).update(available_quantity=eq.available_quantity-isl.quantity)
+        
+       if isl.is_return==True:
+        generalequipment.objects.filter(pk=ik).update(available_quantity=eq.available_quantity+isl.quantity)
+    
+          
+         
 
     return redirect('superindent')
+   
+   else: 
+     form=remarkform()
+     return render(request,'sportapp/remarkform.html',{'form':form})  
+    
 
 def deny(request,pk):
-     issue.objects.filter(pk=pk).update(is_pending=False)
-     return redirect('superindent')
-
+ if request.method=='POST': 
+    form=remarkform(request.POST)
+    if form.is_valid:
+        post=form.save(commit=False)
+    issue.objects.filter(pk=pk).update(is_pending=False,date=datetime.now(),remark=post.remark)
+    return redirect('superindent')
+ else :
+    form=remarkform()
+    return render(request,'sportapp/remarkform.html',{'form':form}) 
 
 def secyEquipments(request):
     user = request.user
@@ -293,7 +321,7 @@ def SecyEquipmentView(request,pk):
         context = {
             'form':form,
         }
-    return render(request, 'sportapp/add_equipment.html', context)               
+        return render(request, 'sportapp/add_equipment.html', context)               
 
 def SecyIssueFormView(request,pk,id):
     equip=get_object_or_404(equipment, id=id)
@@ -343,7 +371,7 @@ def Secyreturnequipment(request,pk,id):
             'form':form,
             'maximum_value':eq.total_quantity-eq.available_quantity
         }
-    return render(request, 'sportapp/return_form.html', context)             
+        return render(request, 'sportapp/return_form.html', context)             
 
 class TotalListView(ListView):
     model=issue
@@ -352,6 +380,7 @@ class TotalListView(ListView):
 def general(request):
     clubs_list=clubs.objects.all()
     equipments=generalequipment.objects.all()
+    
     context = {
              'clubs_list': clubs_list,
             'equipments':equipments,
@@ -378,7 +407,8 @@ def generalissue(request,pk):
         if form.is_valid():
             post = form.save(commit=False)  
             quantity = equip.available_quantity-post.quantity
-            post.equipment_name= generalequipment.objects.get(id=id)
+            post.general_equipname=equip
+            post.remark=None
             post.save()
             return redirect('general')  
     else:
@@ -389,7 +419,10 @@ def generalissue(request,pk):
         }
     return render(request, 'sportapp/Issue.html', {'form':form,'maximum_value':equip.available_quantity})      
 
-
+def generallist(request):
+    iss=issue.objects.filter(equipment_name=None)
+    context={'issue_list':iss}
+    return render(request,'sportapp/Issue_list.html',context)
 
 
 

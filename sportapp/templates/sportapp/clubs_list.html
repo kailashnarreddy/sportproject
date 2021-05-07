@@ -23,6 +23,13 @@
       </div>
     {% endfor %}   
     {% endif %}
+     <button class="dropdown-btn">General items 
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+     <a href="{% url 'general' %}">Register stock</a>
+    <a href="{% url 'generalIssueList'   %}">Issue History</a>
+  </div>
  
 </div>
 

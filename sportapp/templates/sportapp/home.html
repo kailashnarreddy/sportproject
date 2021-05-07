@@ -12,7 +12,7 @@
    <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
     <a href="{% url 'clubsList' %}">Secys</a>
     <a href="{% url 'superindent' %}">Superindent</a>
-    <a href="{% url 'general' %}">general</a>
+   
     {% if clubs_list %}
     {% for club in clubs_list %}
   <button class="dropdown-btn">{{club.name}} 
@@ -20,10 +20,19 @@
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
-    <a href="{% url 'IssueList' club.pk %}">Issue History</a>
+    <a href="{% url 'IssueList' club.pk  %}">Issue History</a>
   </div>
   {% endfor %}   
   {% endif %}
+ 
+  <button class="dropdown-btn">General items 
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+     <a href="{% url 'general' %}">Register stock</a>
+    <a href="{% url 'generalIssueList'   %}">Issue History</a>
+  </div>
+  
  
 </div>
 

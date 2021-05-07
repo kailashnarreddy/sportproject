@@ -17,14 +17,17 @@ class EquipmentForm(forms.ModelForm):
 class IssueForm(forms.ModelForm):
     class Meta:
         model=issue
-        fields=['roll','name','quantity','remark']
+        fields=['roll','name','quantity']
 class ReturnForm(forms.ModelForm):
     class Meta:
         model=issue
-        fields=['roll','name','quantity','remark']
+        fields=['roll','name','quantity']
 class generalequipmentform(forms.ModelForm):
     class Meta:
         model=generalequipment
         fields=['name','total_quantity','specification']
 
-        
+class remarkform(forms.ModelForm):
+    class Meta:
+        model=issue
+        fields=['remark']        

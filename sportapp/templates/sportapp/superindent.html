@@ -31,6 +31,7 @@
     <table style="width:100%" class="styled-table">
       <thead>
         <tr>
+        <th>sno</th>
           <th>student name</th>
           <th>roll number</th>
             <th>equipment Name</th>
@@ -45,9 +46,14 @@
       {% for obj in iss %}
       <tr>
         <tr>
+        <td></td>
         <td>{{obj.name}}</td>
         <td>{{obj.roll}}</td>
+        {%if obj.equipment_name %}
         <td>{{obj.equipment_name}}</td>
+        {%else %}
+        <td>{{obj.general_equipname}}</td>
+        {% endif %}
         <td>{{obj.quantity}}</td>
         <td>{{obj.date}}</td>
         {% if obj.is_return%}

@@ -23,7 +23,13 @@
   </div>
   {% endfor %}   
   {% endif %}
- 
+    <button class="dropdown-btn">General items 
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+     <a href="{% url 'general' %}">Register stock</a>
+    <a href="{% url 'generalIssueList'   %}">Issue History</a>
+  </div>
 </div>
 
 <div class="main">
@@ -34,12 +40,13 @@
     <table style="width:100%" class="styled-table">
       <thead>
         <tr>
+          <th>sno</th>
           <th>student name</th>
           <th>roll number</th>
             <th>equipment Name</th>
             <th>Quantity</th>
             <th>Date of Issue</th>
-            <th>remark</th>
+            <th>Remark</th>
             <th>status</th>
             
             
@@ -48,9 +55,14 @@
       <tbody>
       {% for obj in issue_list %}
       <tr>
+      <td></td>
         <td>{{obj.name}}</td>
         <td>{{obj.roll}}</td>
+        {%if obj.equipment_name %}
         <td>{{obj.equipment_name}}</td>
+        {%else %}
+        <td>{{obj.general_equipname}}</td>
+        {% endif %}
         <td>{{obj.quantity}}</td>
         <td>{{obj.date}}</td>
         <td>{{obj.remark}}</td>

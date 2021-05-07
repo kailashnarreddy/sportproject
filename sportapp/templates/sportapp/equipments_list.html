@@ -27,7 +27,13 @@
   </div>
   {% endfor %}   
   {% endif %}
- 
+   <button class="dropdown-btn">General items 
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+     <a href="{% url 'general' %}">Register stock</a>
+    <a href="{% url 'generalIssueList'   %}">Issue History</a>
+  </div>
 </div>
 
 <div class="main">
@@ -42,6 +48,7 @@
             <th>sno</th>
             <th>Name</th>
             <th>Specificaton</th>
+            <th>Date</th>
             <th>Total Quantity</th>
             <th>Available Quantity</th>
             <th>Delete</th>
@@ -56,6 +63,7 @@
         <td></td>
         <td>{{equi.name}}</td>
         <td>{{equi.specification}}</td>
+        <td>{{equi.date}}</td>
         <td>{{equi.total_quantity}}</td>
         <td>{{equi.available_quantity}}</td>
         <td><a href="{% url 'equipmentDelete' pk=pk id=equi.id %}"><button class="redb" >delete</button></a></td>
