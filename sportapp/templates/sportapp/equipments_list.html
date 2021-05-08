@@ -35,13 +35,23 @@
     <a href="{% url 'generalIssueList'   %}">Issue History</a>
   </div>
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
+
 </div>
 
 <div class="main">
+{% if gensec %}
     <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
     <h1>
         Equipments list
     </h1>
+     {% endif %}
+     {% if super %}
+     
+     <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
+    <h1>
+        Equipments list
+    </h1>
+    {% endif %}
     {% if equipments %}
     <table style="width:100%" class="styled-table">
       <thead>
@@ -52,9 +62,14 @@
             <th>Date</th>
             <th>Total Quantity</th>
             <th>Available Quantity</th>
+            {%if super or gensec%}
+           
             <th>Delete</th>
+             {% endif %}
+            {% if not super %}
             <th>Issue</th>
             <th>Return</th>
+            {% endif %}
            
         </tr>
       </thead>
@@ -67,9 +82,13 @@
         <td>{{equi.date}}</td>
         <td>{{equi.total_quantity}}</td>
         <td>{{equi.available_quantity}}</td>
+        {%if super or gensec%}
         <td><a href="{% url 'equipmentDelete' pk=pk id=equi.id %}"><button class="redb" >delete</button></a></td>
+        {% endif %}
+        {% if not super  %}
         <td><a href="{% url 'Issue' pk=pk id=equi.id %}"><button class="grayb">Issue</button></a></td>
         <td><a href="{% url 'Return' pk=pk id=equi.id %}"><button class="grayb">Return</button></td>
+        {% endif %}
       </tr>
       {% endfor %}
       </tbody>
@@ -82,7 +101,6 @@
 
 <script src="../../static/sidebar.js">
 </script>
-
 </body>
-</html> 
+</html>
 

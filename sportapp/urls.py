@@ -29,6 +29,7 @@ urlpatterns = [
     path('general/',views.general,name='general'),
     path('addgeneral/',views.addgeneral,name='addgeneral'),
     path('generalissue/<int:pk>',views.generalissue,name='generalissue'),
-    path('generalIssueList/',views.generallist,name='generalIssueList')
+    path('generalIssueList/',views.generallist,name='generalIssueList'),
+    path('generalreturn/<slug:id>',views.generalreturn,name='generalreturn')
 
 ]

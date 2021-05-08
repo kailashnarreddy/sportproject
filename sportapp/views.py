@@ -76,14 +76,7 @@ def UpdateClubsView(request,pk):
         }
     return render(request, 'sportapp/add_club.html', context)   
 
-# class UpdateClubView(UpdateView):
-#     departments=[('CSE','CSE'),('MNC','MNC'),('EEE','EEE'),('ECE','ECE'),('CL','CL'),('CST','CST'),('EP','EP'),('BT','BT'),('MECH','MECH'),('CIVIL','CIVIL'),('others','others')]
-#     programs=[('BTECH','BTECH'),('MTECH','MTECH'),('B.DES','B.DES'),('M.DES','M.DES'),('PhD','PhD'),('M.S.(R)','M.S.(R)'),('M.A.','M.A.'),('M.Sc.','M.Sc.'),('others','others')]
-#     dept=forms.CharField(widget=forms.Select(choices=departments))
-#     prog=forms.CharField(widget=forms.Select(choices=programs))
-#     model=clubs
-#     fields = '__all__'
-#     template_name = 'sportapp/add_club.html'
+
         
 
 class ClubsListView(ListView):
@@ -115,11 +108,22 @@ def EquipmentListView(request,pk):
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
     c=club.name
+    superin=0
+    gensec=0
+    
+    if request.user.email=='bteja@iitg.ac.in'    :
+      superin=1
+    if request.user.email== 'bkartheek@iitg.ac.in' :
+      
+      gensec=1 
+    
     context = {
              'clubs_list': clubs_list,
              'pk': pk,
             'equipments':equipments,
             'c':c,
+            'super':superin,
+            'gensec':gensec
         }
     return render(request, 'sportapp/equipments_list.html', context)      
 
@@ -398,10 +402,19 @@ class TotalListView(ListView):
 def general(request):
     clubs_list=clubs.objects.all()
     equipments=generalequipment.objects.all()
+    superin=0
+    gensec=0
+    
+    if request.user.email=='bteja@iitg.ac.in'    :
+      super=1
+    if request.user.email== 'bkartheek@iitg.ac.in' :
+      
+      gensec=1 
     
     context = {
              'clubs_list': clubs_list,
             'equipments':equipments,
+            'super':superin,'gensec':gensec
         }
     return render(request,'sportapp/general.html',context)
 def addgeneral(request):
@@ -438,29 +451,28 @@ def generalissue(request,pk):
     return render(request, 'sportapp/Issue.html', {'form':form,'maximum_value':equip.available_quantity})      
 
 def generallist(request):
+     
     iss=issue.objects.filter(equipment_name=None)
     context={'issue_list':iss}
     return render(request,'sportapp/Issue_list.html',context)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
+def generalreturn(request,id):
+    if request.method == 'POST':
+        eq=get_object_or_404(generalequipment,pk=id)
+        form = ReturnForm(request.POST)
+        quan=request.POST.get('quantity')
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.remark=None
+            iss=issue(name=post.name,general_equipname=eq,roll=post.roll,quantity=quan,is_return=True)
+            iss.save()
+            return redirect('generalIssueList')  
+    else:
+        form = ReturnForm()
+        eq=get_object_or_404(generalequipment,pk=id)
+        context = {
+            'form':form,
+            'maximum_value':eq.total_quantity-eq.available_quantity
+        }
+        return render(request, 'sportapp/return_form.html', context)
