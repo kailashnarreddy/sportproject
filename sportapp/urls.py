@@ -30,6 +30,7 @@ urlpatterns = [
     path('addgeneral/',views.addgeneral,name='addgeneral'),
     path('generalissue/<int:pk>',views.generalissue,name='generalissue'),
     path('generalIssueList/',views.generallist,name='generalIssueList'),
-    path('generalreturn/<slug:id>',views.generalreturn,name='generalreturn')
+    path('generalreturn/<slug:id>',views.generalreturn,name='generalreturn'),
+    path('generaldelete/<slug:id>',views.generaldelete,name='generaldelete')
 
 ]

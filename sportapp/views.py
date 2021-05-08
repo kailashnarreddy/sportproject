@@ -54,6 +54,7 @@ def ClubsView(request):
     return render(request, 'sportapp/add_club.html', context)   
     
 def UpdateClubsView(request,pk):
+ if request.user.email=='superindent@iitg.ac.in' or request.user.email=='gensec@iitg.ac.in' :  
     if request.method == 'POST':
         form1 = ClubForm(request.POST)
         if form1.is_valid():
@@ -84,6 +85,7 @@ class ClubsListView(ListView):
     template_name = 'sportapp/clubs_list.html'
 
 def EquipmentView(request,pk):
+   if request.user.email=='n.kailash@iitg.ac.in' or request.user.email=='gensec@iitg.ac.in' :  
     if request.method == 'POST':
         form = EquipmentForm(request.POST)
         if form.is_valid():
@@ -113,7 +115,7 @@ def EquipmentListView(request,pk):
     
     if request.user.email=='bteja@iitg.ac.in'    :
       superin=1
-    if request.user.email== 'bkartheek@iitg.ac.in' :
+    if request.user.email== 'n.kailash@iitg.ac.in' :
       
       gensec=1 
     
@@ -130,9 +132,10 @@ def EquipmentListView(request,pk):
 
 
 def deleteEquipmentView(request,id,pk):
-    a=equipment.objects.filter(id=id)
-    a.delete()
-    return redirect('equipmentsList',pk=pk)
+    if request.user.email=='n.kailash@iitg.ac.in' or request.user.email=='gensec@iitg.ac.in' :
+     a=equipment.objects.filter(id=id)
+     a.delete()
+     return redirect('equipmentsList',pk=pk)
 
 
 def IssueFormView(request,pk,id):
@@ -167,7 +170,7 @@ def IssueListView(request,pk):
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
     tot_list=issue.objects.all()
-   
+    print(tot_list)
     issue_list=[]
     
     for equip in equipments:
@@ -476,3 +479,7 @@ def generalreturn(request,id):
             'maximum_value':eq.total_quantity-eq.available_quantity
         }
         return render(request, 'sportapp/return_form.html', context)
+def generaldelete(request,id):
+    a=generalequipment.objects.get(pk=id)
+    a.delete()
+    return redirect('general')        

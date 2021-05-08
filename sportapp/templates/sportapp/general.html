@@ -82,7 +82,7 @@
         <td>{{equi.total_quantity}}</td>
         <td>{{equi.available_quantity}}</td>
         {%if super or gensec%}
-        <td><a href="#"><button class="redb" >delete</button></a></td>
+        <td><a href="{%url 'generaldelete' id=equi.pk %}"><button class="redb" >delete</button></a></td>
         {% endif %}
           {% if not super  %}
         <td><a href="{% url 'generalissue' equi.pk %}"><button class="grayb">Issue</button></a></td>
