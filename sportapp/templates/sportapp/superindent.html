@@ -32,8 +32,9 @@
       <thead>
         <tr>
         <th>sno</th>
-          <th>student name</th>
-          <th>roll number</th>
+          
+          <th>club</th>
+          <th>club_secy</th>
             <th>equipment Name</th>
             <th>Quantity</th>
             <th>Date</th>
@@ -47,22 +48,22 @@
       <tr>
         <tr>
         <td></td>
-        <td>{{obj.name}}</td>
-        <td>{{obj.roll}}</td>
-        {%if obj.equipment_name %}
-        <td>{{obj.equipment_name}}</td>
+        <td>{{obj.club}}</td>
+        <td>{{obj.secy_name}}</td>
+        {%if obj.iss.equipment_name %}
+        <td>{{obj.iss.equipment_name}}</td>
         {%else %}
-        <td>{{obj.general_equipname}}</td>
+        <td>{{obj.iss.general_equipname}}</td>
         {% endif %}
-        <td>{{obj.quantity}}</td>
-        <td>{{obj.date}}</td>
-        {% if obj.is_return%}
+        <td>{{obj.iss.quantity}}</td>
+        <td>{{obj.iss.date}}</td>
+        {% if obj.iss.is_return%}
         <td>return request</td>
         {%else%}
         <td>issue request</td>
         {% endif %}
-        <td><a href="{% url 'accept' obj.pk %}"><button class="greenb">accept</button></td>
-        <td><a href="{% url 'deny' obj.pk %}"><button class="redb">deny</button></td>        
+        <td><a href="{% url 'accept' obj.iss.pk %}"><button class="greenb">accept</button></td>
+        <td><a href="{% url 'deny' obj.iss.pk %}"><button class="redb">deny</button></td>        
       </tr>
     {% endfor %}
   </tbody>

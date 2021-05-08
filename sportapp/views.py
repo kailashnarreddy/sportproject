@@ -11,7 +11,11 @@ from datetime import datetime
 
 
 # Create your views here.
-
+class sup:
+    def __init__(self,iss,club,secy_name) :
+        self.iss=iss
+        self.club=club
+        self.secy_name=secy_name
 
 def Index(request):
     clubs_list=clubs.objects.all()
@@ -201,8 +205,22 @@ def superindent(request):
     user = request.user
     if user.email=="n.kailash@iitg.ac.in":
         iss=issue.objects.filter(is_pending=True)
-    
         context={'iss':iss}
+        
+        suplist=[]
+        for i in range(len(iss)):
+            if iss[i].equipment_name :
+                p=iss[i].equipment_name.sport.name
+                q=iss[i].equipment_name.sport.secy_name
+                p1=sup(iss[i],p ,q )
+                suplist.append(p1)
+            else:
+                suplist.append(sup(iss[i],"general","general"))
+
+       
+        context={'iss':suplist}
+        
+
         return render(request,'sportapp/superindent.html',context)
     else:
         return redirect('Home')
