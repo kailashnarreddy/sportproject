@@ -219,17 +219,21 @@ def general(request):
 
 
 def deleteEquipmentView(request,id,pk):
+ if isgen(request) or issup(request)  : 
     if isgen(request) or issup(request) :
      a=equipment.objects.filter(id=id)
      a.delete()
      return redirect('equipmentsList',pk=pk)
+ else :
+    raise Http404("Page does not exist")     
 
 def generaldelete(request,id):
   if isgen(request) or issup(request):  
     a=generalequipment.objects.get(pk=id)
     a.delete()
     return redirect('general')
-
+  else :
+    raise Http404("Page does not exist")
 def IssueFormView(request,pk,id):
     equip=get_object_or_404(equipment, id=id)
    
@@ -447,8 +451,9 @@ def superindent(request):
         context={'iss':suplist,'clubs_list':allclubs()}
         
 
-        return render(request,'sportapp/superindent.html',context)     
-
+        return render(request,'sportapp/superindent.html',context)  
+    else :        
+     raise Http404("Page does not exist")
 def accept(request,pk):
   if issup(request):   
    if request.method=='POST': 
@@ -484,7 +489,8 @@ def accept(request,pk):
    else: 
      form=remarkform()
      return render(request,'sportapp/remarkform.html',{'form':form})  
-    
+  else :        
+     raise Http404("Page does not exist")  
 
 def deny(request,pk):
  if issup(request):     
@@ -497,7 +503,8 @@ def deny(request,pk):
   else :
     form=remarkform()
     return render(request,'sportapp/remarkform.html',{'form':form}) 
-          
+ else :        
+     raise Http404("Page does not exist")          
 
 class TotalListView(ListView):
     model=issue
