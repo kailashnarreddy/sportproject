@@ -13,16 +13,7 @@ from datetime import datetime
 
 
 
-class sup:
-    def __init__(self,iss,club,secy_name) :
-        self.iss=iss
-        self.club=club
-        self.secy_name=secy_name
-class equipmentspec:
-    def __init__(self,equi,spec,club):
-        self.equi=equi
-        self.spec=spec
-        self.club=club
+
 def isgen(request):
     if request.user.email=="bkartheek@iitg.ac.in":
         return True
@@ -66,10 +57,6 @@ def Index(request):
                  'super':issup(request)
                   
                     }
-                
-                 
-                 
-                
                  return render(request,'sportapp/home.html',context)
 
        
@@ -79,6 +66,7 @@ def Index(request):
 def ClubsView(request):
   if isgen(request) or issup(request)  :
     if request.method == 'POST':
+        
         form = ClubForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
@@ -122,6 +110,7 @@ def UpdateClubsView(request,pk):
 
 def ClubsListView(request):
   if isgen(request) or issup(request) :  
+   
     gensec=0
     if isgen(request):
         gensec=1
@@ -282,6 +271,7 @@ def generalissue(request,pk):
             quantity = equip.available_quantity-post.quantity
             post.general_equipname=equip
             post.remark=None
+            
             if isgen(request):
                 post.is_gen=1;
             else :
@@ -298,44 +288,37 @@ def generalissue(request,pk):
     return render(request, 'sportapp/Issue.html', {'form':form,'maximum_value':equip.available_quantity})      
 
 
-
+def myfuc(d):  
+    return d.date
 def IssueListView(request,pk):
    if request.user.email == clubs.objects.get(pk=pk).email or isgen(request) or issup(request):
     clubs_list=clubs.objects.all()
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
+    
     tot_list=issue.objects.all()
     issue_list=[]
+    secy=clubs.objects.get(pk=pk).email 
+    genlist=set()
     
     for equip in equipments:
         for o in tot_list:
-           if o.user :  
-            if str(o.user.email) == str(equip.sport.email):
-              if o.equipment_name :
-                p=equip.specification
-                if not o.is_gen :
-                 r=equip.sport.name
-                else :
-                  r=None    
-                q=equipmentspec(o,p,r)
-                issue_list.append(q)
-              else :
-                p=o.general_equipname.specification
-                if not o.is_gen :
-                 r=clubs.objects.get(email=o.user.email).name
-                else :
-                  r=None
-                q=equipmentspec(o,p,r)
-                issue_list.append(q)   
-           else :
-              if(o.equipment_name) :
-               if(o.equipment_name.name)== str(equip.name) :
-                   p=o.equipment_name.specification
-                   r=None
-                   q=equipmentspec(o,p,r)
-                   issue_list.append(q)
+           if o.equipment_name : 
+            if str(o.equipment_name.name) == str(equip.name):
+              
+              issue_list.append(o)
+           elif  o.user:
+            
+            if   o not in genlist:
+             if str(o.user.email) == str(secy):
+              
+               
+                issue_list.append(o)
+                genlist.add(o)
 
     issue_list.reverse()  
+    issue_list.sort(reverse=True,key=myfuc)
+    
     gensec=0
     if isgen(request):
         gensec=1    
@@ -362,20 +345,14 @@ def IssueListView(request,pk):
         return render(request, 'sportapp/Issue_list.html', context)
    else:
        raise Http404("Page does not exist")
+
 def generallist(request):
     clubs_list=clubs.objects.all() 
     issue_list=issue.objects.filter(equipment_name=None)
     
     iss=[]
-    for i in range(len(issue_list)):            
-                p=issue_list[i].general_equipname.specification
-                if issue_list[i].user:
-                    r=issue_list[i].user.name
-                    q=equipmentspec(issue_list[i],p,r)
-                else :
-                    r=None
-                    q=equipmentspec(issue_list[i],p,r)    
-                iss.append(q)
+    for i in range(len(issue_list)):               
+                iss.append(issue_list[i])
     iss.reverse()            
     gensec=0
     if isgen(request):
@@ -394,16 +371,7 @@ def gensecissuelist(request):
        issue_list=issue.objects.filter(is_gen=1) 
        iss=[]
        for i in range(len(issue_list)):         
-           if issue_list[i].general_equipname :   
-                p=issue_list[i].general_equipname.specification
-                r=None
-                q=equipmentspec(issue_list[i],p,r)
-                iss.append(q)
-           else :
-                p=issue_list[i].equipment_name.specification
-                r=None
-                q=equipmentspec(issue_list[i],p,r)
-                iss.append(q)       
+                iss.append(issue_list[i])       
        iss.reverse()
        context={'issue_list':iss,'clubs_list':allclubs(),'gensec':1,'super':issup(request)}
        return render(request,'sportapp/Issue_list.html',context)  
@@ -421,7 +389,7 @@ def returnequipment(request,pk,id):
              post.is_gen=1
             else :
              post.is_gen=0
-             post.user=equip.sport
+             post.user=eq.sport
 
             post.save()
         
@@ -464,6 +432,8 @@ def generalreturn(request,id):
 
 
 
+
+
 def superindent(request):
    
     if issup(request):
@@ -472,32 +442,12 @@ def superindent(request):
         print(iss)
         suplist=[]
         for i in range(len(iss)):           
-             if iss[i].user :
-              if iss[i].equipment_name :
-                p=iss[i].equipment_name.sport.name
-                q=iss[i].equipment_name.sport.secy_name
-                p1=sup(iss[i],p ,q )
-                suplist.append(p1)
-              else:
-                p=clubs.objects.get(email=iss[i].user.email).name
-                q=clubs.objects.get(email=iss[i].user.email).secy_name
-                suplist.append(sup(iss[i],p,q))
-             else :
-              if iss[i].equipment_name :
-                p=iss[i].equipment_name.sport.name
-                q="General Secy"
-                p1=sup(iss[i],p ,q )
-                suplist.append(p1)
-              else:
-                p="General Items"
-                q="General Secy"
-                suplist.append(sup(iss[i],p,q))
-       
+            suplist.append(iss[i])
+        suplist.reverse()
         context={'iss':suplist,'clubs_list':allclubs()}
         
 
-        return render(request,'sportapp/superindent.html',context)
-     
+        return render(request,'sportapp/superindent.html',context)     
 
 def accept(request,pk):
   if issup(request):   

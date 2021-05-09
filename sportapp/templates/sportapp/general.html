@@ -47,13 +47,14 @@
 </div>
 
 <div class="main">
-     <h1>
+<h1>
         General Equipments list
     </h1>
 {% if gensec or super %}
     <a href="{% url 'addgeneral' %}" class="myButton">Add Equipments</a>
-
+    
    {% endif %}
+ 
     {% if equipments %}
     <table style="width:100%" class="styled-table">
       <thead>
