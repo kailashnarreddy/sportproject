@@ -9,15 +9,9 @@ urlpatterns = [
     path('',views.Index,name='Home'),
     path('AddClub/', views.ClubsView, name='clubs'),
     path('superindent/', views.superindent, name='superindent'),
-    path('Secy/', views.secyEquipments, name='Secy'),
-    path('Secy/<int:pk>/add_equipment', views.SecyEquipmentView, name='SecyEquipments'),
-    path('Secy/<int:pk>/<uuid:id>/Issue/',views.SecyIssueFormView,name='SecyIssue'),
-    path('Secy/<int:pk>/<uuid:id>/delete/',views.SecyDeleteEquipmentView,name='SecyequipmentDelete'),
-    path('Return/<int:pk>/<slug:id>',views.Secyreturnequipment,name='SecyReturn'),
-    path('Secy/IssueList', views.secyIssueList, name='SecyIssueList'),
     path('accept/<pk>', views.accept, name='accept'),
     path('deny/<pk>', views.deny, name='deny'),
-    path('clubsList/',views.ClubsListView.as_view(),name='clubsList'),
+    path('clubsList/',views.ClubsListView,name='clubsList'),
     path('editClub/<pk>/', views.UpdateClubsView, name='editClub'),
     path('<pk>/add_equipment/', views.EquipmentView, name='equipments'),
     path('<pk>/equipmentsList/', views.EquipmentListView, name='equipmentsList'),
@@ -31,6 +25,7 @@ urlpatterns = [
     path('generalissue/<int:pk>',views.generalissue,name='generalissue'),
     path('generalIssueList/',views.generallist,name='generalIssueList'),
     path('generalreturn/<slug:id>',views.generalreturn,name='generalreturn'),
-    path('generaldelete/<slug:id>',views.generaldelete,name='generaldelete')
+    path('generaldelete/<slug:id>',views.generaldelete,name='generaldelete'),
+    path('gensecissuelist',views.gensecissuelist,name='gensecissuelist')
 
 ]

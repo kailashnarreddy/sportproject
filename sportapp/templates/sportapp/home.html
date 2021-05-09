@@ -9,10 +9,12 @@
 <body>
  
 <div class="sidenav">
-   
+     {% if gensec or super %}
     <a href="{% url 'clubsList' %}">Secys</a>
+    {% endif %}
+    {% if super%}
     <a href="{% url 'superindent' %}">Superindent</a>
-   
+     {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
   <button class="dropdown-btn">{{club.name}} 
@@ -32,6 +34,8 @@
      <a href="{% url 'general' %}">Register stock</a>
     <a href="{% url 'generalIssueList'   %}">Issue History</a>
   </div>
+
+   
   
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
 </div>

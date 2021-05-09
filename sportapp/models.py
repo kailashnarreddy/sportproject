@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 # Create your models here.
 
-
+from django.contrib.auth.models import User
 import uuid
 
 
@@ -40,9 +40,10 @@ class issue(models.Model):
     is_pending= models.BooleanField(default=True)
     req=models.BooleanField(default=False)
     remark=models.TextField(null=True,default=None)
-      
+    is_gen=models.BooleanField(default=False)
+    user=models.ForeignKey('clubs',on_delete=models.CASCADE,null=True,default=None)  
     
-
+    
    
     class Meta:
      ordering = ['date']
@@ -52,5 +53,6 @@ class generalequipment(models.Model):
     available_quantity=models.IntegerField(null=True)
     specification=models.TextField(null=True)
     date=models.DateTimeField(auto_now=True)
+
     def __str__(self):
        return self.name    

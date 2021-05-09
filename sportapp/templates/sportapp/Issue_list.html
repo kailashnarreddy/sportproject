@@ -10,8 +10,12 @@
 <body>
  
 <div class="sidenav">
+ {% if gensec or super %}
     <a href="{% url 'clubsList' %}">Secys</a>
+    {% endif %}
+    {%if super %}
     <a href="{% url 'superindent' %}">Superindent</a>
+    {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
   <button class="dropdown-btn">{{club.name}} 
@@ -30,6 +34,9 @@
      <a href="{% url 'general' %}">Register stock</a>
     <a href="{% url 'generalIssueList'   %}">Issue History</a>
   </div>
+    {% if gensec %}
+  <a href="{% url 'gensecissuelist' %}"> My_issues</a>
+  {% endif %}
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
 </div>
 
@@ -45,11 +52,12 @@
           <th>student name</th>
           <th>roll number</th>
             <th>equipment Name</th>
+            <th>specification</th>
             <th>Quantity</th>
             <th>Date of Issue</th>
+            <th>Issued By </th>
             <th>Remark</th>
             <th>status</th>
-            
             
         </tr>
       </thead>
@@ -57,31 +65,43 @@
       {% for obj in issue_list %}
       <tr>
       <td></td>
-        <td>{{obj.name}}</td>
-        <td>{{obj.roll}}</td>
-        {%if obj.equipment_name %}
-        <td>{{obj.equipment_name}}</td>
+        <td>{{obj.equi.name}}</td>
+        <td>{{obj.equi.roll}}</td>
+        {%if obj.equi.equipment_name %}
+        <td>{{obj.equi.equipment_name}}</td>
+        <td>{{obj.spec}}</td>
         {%else %}
-        <td>{{obj.general_equipname}}</td>
+        <td>{{obj.equi.general_equipname}}</td>
+        <td>{{obj.spec}}
         {% endif %}
-        <td>{{obj.quantity}}</td>
-        <td>{{obj.date}}</td>
-        <td>{{obj.remark}}</td>
-        {% if obj.is_return  %}        
-        {% if obj.is_pending %}
+        
+        <td>{{obj.equi.quantity}}</td>
+        <td>{{obj.equi.date}}</td>
+        {% if obj.equi.is_gen%}
+        <td>Gen secy</td>
+        {%else%}
+        {% if obj.club %}
+        <td>{{ obj.club }} Club secy</td>
+        {%else %}
+        <td> Club Secy </td>
+        {%endif%}
+        {% endif %}
+        <td>{{obj.equi.remark}}</td>
+        {% if obj.equi.is_return  %}        
+        {% if obj.equi.is_pending %}
         <td>return request pending</td>
         {% else %}
-        {% if obj.req%}
+        {% if obj.equi.req%}
         <td>returned</td>
         {%else%}
         <td>return denied</td>
         {% endif %}
         {% endif %}
         {% else %}
-        {% if obj.is_pending %}
+        {% if obj.equi.is_pending %}
         <td>issue request pending</td>
         {% else %}
-        {%if obj.req%}
+        {%if obj.equi.req%}
        <td> issued</td>
        {%else%}
        <td>issue denied</td>
