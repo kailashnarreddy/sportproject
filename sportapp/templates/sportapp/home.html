@@ -34,6 +34,9 @@
      <a href="{% url 'general' %}">Register stock</a>
     <a href="{% url 'generalIssueList'   %}">Issue History</a>
   </div>
+  {% if gensec %}
+  <a href="{% url 'gensecissuelist' %}"> My_issues</a>
+  {% endif %}
 
    
   
@@ -41,10 +44,7 @@
 </div>
 
 <div class="main">
-  <h2>Sidebar Dropdown</h2>
-  <p>Click on the dropdown button to open the dropdown menu inside the side navigation.</p>
-  <p>This sidebar is of full height (100%) and always shown.</p>
-  <p>Some random text..</p>
+    <h1>Home</h1>
 </div>
 
 <script src="../../static/sidebar.js">

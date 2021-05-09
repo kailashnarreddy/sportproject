@@ -31,7 +31,7 @@ def isgen(request):
 
 
 def issup(request):
-    if request.user.email=="mbharani@iitg.ac.in":              
+    if request.user.email=="n.kailash@iitg.ac.in":
         return True
     else :
         return False    
@@ -50,7 +50,8 @@ def Index(request):
     if isgen(request) or issup(request):
              context = {
             'clubs_list':clubs_list,
-            'super':issup(request)
+            'super':issup(request),
+                 'gensec':isgen(request),
                     }
              return render(request,'sportapp/home.html',context)
     else:
@@ -163,7 +164,7 @@ def addgeneral(request):
   raise Http404("Page does not exist")        
            
 def EquipmentListView(request,pk):
-
+   if request.user.email == clubs.objects.get(pk=pk).email or isgen(request) or issup(request):
     clubs_list=clubs.objects.all()
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
@@ -196,7 +197,8 @@ def EquipmentListView(request,pk):
             'gensec':gensec
         }
        return render(request, 'sportapp/equipments_list.html', context)      
-
+   else:
+       raise Http404("Page does not exist")
 
 def general(request):
     clubs_list=clubs.objects.all()
@@ -298,6 +300,7 @@ def generalissue(request,pk):
 
 
 def IssueListView(request,pk):
+   if request.user.email == clubs.objects.get(pk=pk).email or isgen(request) or issup(request):
     clubs_list=clubs.objects.all()
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
@@ -357,6 +360,8 @@ def IssueListView(request,pk):
             'super':issup(request)
         }
         return render(request, 'sportapp/Issue_list.html', context)
+   else:
+       raise Http404("Page does not exist")
 def generallist(request):
     clubs_list=clubs.objects.all() 
     issue_list=issue.objects.filter(equipment_name=None)
@@ -399,7 +404,7 @@ def gensecissuelist(request):
                 r=None
                 q=equipmentspec(issue_list[i],p,r)
                 iss.append(q)       
-        
+       iss.reverse()
        context={'issue_list':iss,'clubs_list':allclubs(),'gensec':1,'super':issup(request)}
        return render(request,'sportapp/Issue_list.html',context)  
 def returnequipment(request,pk,id):
@@ -410,6 +415,8 @@ def returnequipment(request,pk,id):
         if form.is_valid():
             post = form.save(commit=False)
             post.remark=None
+            post.equipment_name=eq
+            post.is_return = True
             if isgen(request) :
              post.is_gen=1
             else :
@@ -436,13 +443,15 @@ def generalreturn(request,id):
         if form.is_valid():
             post = form.save(commit=False)
             post.remark=None
+            post.is_return= True
+            post.general_equipname = eq
             if isgen(request):
                 post.is_gen=1;
             else :
                 post.is_gen=0;
                 post.user=clubs.objects.get(email=request.user.email)
             post.save()
-            return redirect('general')              
+            return redirect('generalIssueList')
     else:
         form = ReturnForm()
         eq=get_object_or_404(generalequipment,pk=id)

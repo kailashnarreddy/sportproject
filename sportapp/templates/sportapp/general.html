@@ -47,19 +47,13 @@
 </div>
 
 <div class="main">
-{% if gensec %}
-    <a href="{% url 'addgeneral' %}" class="myButton">Add Equipments</a>
-    <h1>
+     <h1>
         General Equipments list
     </h1>
-   {% endif %}
- {% if super %}
+{% if gensec or super %}
+    <a href="{% url 'addgeneral' %}" class="myButton">Add Equipments</a>
 
-    <a href="{% url 'addgeneral' %}" class="myButton">Add Equipments</a>
-    <h1>
-        General Equipments list
-    </h1>
- {% endif %} 
+   {% endif %}
     {% if equipments %}
     <table style="width:100%" class="styled-table">
       <thead>
