@@ -8,23 +8,9 @@
 
 </head>
 
-<style>
-  * {
-    box-sizing: border-box;
-  }
-  
-  #myInput {
-    background-image: url('/css/searchicon.png');
-    background-position: 10px 10px;
-    background-repeat: no-repeat;
-    width: 100%;
-    font-size: 16px;
-    padding: 12px 20px 12px 40px;
-    border: 1px solid #ddd;
-    margin-bottom: 12px;
-  }
 
-  </style>
+
+  
 <body>
  
 <div class="sidenav">
@@ -58,13 +44,23 @@
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
 <div class="main">
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+  <select id="location-select" name="locationselect">
+    <option value="">All</option>
+    <option value="issued">Issued</option>
+    <option value="returned">Returned</option>
+    <option value="issue request pending">Issue request pending</option>
+    <option value="return request pending">Return request pending</option>
+  </select>
+  <span id="filter-select-count"></span>
     <h1>
         Issue list  
     </h1>
     {% if issue_list %}
-    <table style="width:100%" class="styled-table" id="myTable">
+    <table style="width:100%" class="styled-table" >
       <thead>
         <tr>
           <th>sno</th>
@@ -83,7 +79,7 @@
       <tbody>
       {% for obj in issue_list %}
       <tr>
-      <td></td>
+       <td></td>
         <td>{{obj.name}}</td>
         <td>{{obj.roll}}</td>
         {%if obj.equipment_name %}
@@ -117,7 +113,7 @@
         <td>issue request pending</td>
         {% else %}
         {%if obj.req%}
-       <td> issued</td>
+       <td>issued</td>
        {%else%}
        <td>issue denied</td>
        {%endif%}
@@ -135,42 +131,42 @@
 </div>
 
 <script>
-  function myFunction() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myInput");
-    console.log(input)
-    filter = input.value.toUpperCase();
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 1; i < tr.length; i++) {
-      var tds = tr[i].getElementsByTagName("td");
+  
+$(document).ready(function(){
+  
+  $("#location-select").change(function(){
+        // Retrieve the option value and reset the count to zero
+        var locationSelect = $(this).val(), count = 0;
+        
+        $("table tr").each(function(index) {
+        if (index !== 0) {
 
-    // hide the row
-    tr[i].style.display = "none";
+            $row = $(this);
 
-    // loop through row cells
-    for (var i2 = 1; i2 < 5; i2++) {
+            var id = $row.find("td:eq(9)").text();
+          
+            if (id.indexOf(locationSelect) !== 0) {
+                $row.hide();
+            }
+            else {
+                $row.show();
+                count++;
 
-      // if there's a match
-      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1) {
-
-        // show the row
-        tr[i].style.display = "";
-
-        // skip to the next row
-        continue;
-
-      }
-    }
-  }
-}
+            }
+        }
+    });
+        
+        
+        // Update the count
+        var numberItems = count;
+        $("#filter-select-count").text("Results = "+count);
+    });
+});
   </script>
 
 
 <script src="../../static/sidebar.js">
 </script>
-
-
 
 </body>
 </html>  
