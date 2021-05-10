@@ -242,6 +242,7 @@ def generaldelete(request,id):
   else :
     raise Http404("Page does not exist")
 def IssueFormView(request,pk,id):
+   if not issup(request): 
     equip=get_object_or_404(equipment, id=id)
    
     if request.method == 'POST':
@@ -271,9 +272,10 @@ def IssueFormView(request,pk,id):
             'maximum_value':equip.available_quantity
         }
         return render(request, 'sportapp/Issue.html', context)      
-
+   raise Http404("Page does not exist")
 
 def generalissue(request,pk):
+  if not issup(request): 
     equip=get_object_or_404(generalequipment, pk=pk)
     if request.method == 'POST':
         form = IssueForm(request.POST)
@@ -297,7 +299,7 @@ def generalissue(request,pk):
             'maximum_value':equip.available_quantity
         }
     return render(request, 'sportapp/Issue.html', {'form':form,'maximum_value':equip.available_quantity})      
-
+  raise Http404("Page does not exist")
 
 def myfuc(d):  
     return d.date
@@ -388,6 +390,7 @@ def gensecissuelist(request):
        return render(request,'sportapp/Issue_list.html',context)  
    raise Http404("Pasge does not exist")    
 def returnequipment(request,pk,id):
+   if not issup(request):  
     if request.method == 'POST':
         eq=get_object_or_404(equipment,pk=id)
         form = ReturnForm(request.POST)
@@ -414,8 +417,9 @@ def returnequipment(request,pk,id):
             'maximum_value':eq.total_quantity-eq.available_quantity
         }
         return render(request, 'sportapp/return_form.html', context)    
-
+   raise Http404("Page does not exist")
 def generalreturn(request,id):
+   if not issup(request):  
     if request.method == 'POST':
         eq=get_object_or_404(generalequipment,pk=id)
         form = ReturnForm(request.POST)
@@ -440,7 +444,7 @@ def generalreturn(request,id):
             'maximum_value':eq.total_quantity-eq.available_quantity
         }
         return render(request, 'sportapp/return_form.html', context)
-        
+   raise Http404("Page does not exist")     
 
 
 
