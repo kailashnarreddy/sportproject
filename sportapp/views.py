@@ -510,7 +510,7 @@ def deny(request,pk):
     issue.objects.filter(pk=pk).update(is_pending=False,date=datetime.now(),remark=post.remark)
     return redirect('superindent')
   else :
-    form=remarkform()
+    form=remarkform(initial={'remark': "None" })
     return render(request,'sportapp/remarkform.html',{'form':form}) 
  else :        
      raise Http404("Page does not exist")          
