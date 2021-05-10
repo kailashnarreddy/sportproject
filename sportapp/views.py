@@ -134,7 +134,8 @@ def EquipmentView(request,pk):
         context = {
             'form':form,
         }
-    return render(request, 'sportapp/add_equipment.html', context)       
+    return render(request, 'sportapp/add_equipment.html', context)    
+   raise Http404("Page does not exist")      
 def addgeneral(request):
   if issup(request) or isgen(request):  
     if request.method == 'POST':
