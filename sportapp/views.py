@@ -15,37 +15,37 @@ from datetime import datetime
 
 
 def isgen(request):
-    if request.user.email=="bkartheek@iitg.ac.in":
+    if request.user.email=="bkartheek@iitg.ac.in":    # mail id of General Secretary
         return True
     else :
         return False    
 
 
 def issup(request):
-    if request.user.email=="n.kailash@iitg.ac.in":
+    if request.user.email=="n.kailash@iitg.ac.in":     # mail id of Superindent
         return True
     else :
         return False    
 
 def allclubs() :
-    clubs_list=clubs.objects.all()
+    clubs_list=clubs.objects.all()                     # all clublists
     return clubs_list
     
 # Create your views here.
 
-def Index(request):
+def Index(request):                                    # home page view
     clubs_list=clubs.objects.all()
   
     user=request.user
   
-    if isgen(request) or issup(request):
+    if isgen(request) or issup(request):               # superindent and gensec view
              context = {
             'clubs_list':clubs_list,
             'super':issup(request),
                  'gensec':isgen(request),
                     }
              return render(request,'sportapp/home.html',context)
-    else:
+    else:                                              # club secy view
         
         clubs_list=clubs.objects.all()
         for club in clubs_list:
@@ -60,11 +60,11 @@ def Index(request):
                  return render(request,'sportapp/home.html',context)
 
        
-    raise Http404("Page does not exist")
+    raise Http404("Page does not exist")               # raise error(if user is not given permission to access this site)
 
 
-def ClubsView(request):
-  if isgen(request) or issup(request)  :
+def ClubsView(request):                               # club adding view
+  if isgen(request) or issup(request)  :               # only visible to gensec and superindent
     if request.method == 'POST':
         
         form = ClubForm(request.POST)
@@ -80,9 +80,9 @@ def ClubsView(request):
             'form':form,
         }
     return render(request, 'sportapp/add_club.html', context)   
-  raise Http404("Page does not exist") 
-def UpdateClubsView(request,pk):
- if isgen(request) or issup(request) :  
+  raise Http404("Page does not exist")                       
+def UpdateClubsView(request,pk):             #pk of the club             # editing club information  
+ if isgen(request) or issup(request) :                       
     if request.method == 'POST':
         form1 = ClubForm(request.POST)
         if form1.is_valid():
@@ -92,7 +92,7 @@ def UpdateClubsView(request,pk):
 
     else:
         club=clubs.objects.get(pk=pk)
-        dict={
+        dict={                                        # for showing the prensent club information in the html form before editing (Get method)
             "name":club.name,
             "secy_name":club.secy_name,
             "email":club.email,
@@ -103,12 +103,12 @@ def UpdateClubsView(request,pk):
         context = {
             'form':form,
         }
-    return render(request, 'sportapp/add_club.html', context)   
+    return render(request, 'sportapp/add_club.html', context)    
 
  raise Http404("Page does not exist")  
         
 
-def ClubsListView(request):
+def ClubsListView(request):                              #   clubslist page view
   if isgen(request) or issup(request) :  
    
     gensec=0
@@ -117,14 +117,14 @@ def ClubsListView(request):
     context={'clubs_list':allclubs(),'gensec':gensec,'super':issup(request)}
     return render(request,'sportapp/clubs_list.html',context)
   raise Http404("Page does not exist")   
-def EquipmentView(request,pk):
+def EquipmentView(request,pk):                          # adding club equipments view
    if isgen(request) or issup(request):
     if request.method == 'POST':
         form = EquipmentForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.available_quantity=post.total_quantity
-            post.sport=clubs.objects.get(pk=pk)
+            post.available_quantity=post.total_quantity        
+            post.sport=clubs.objects.get(pk=pk)        # linking equipment to clubs table
             post.save()
             messages.success(request,f'Your Equipment has been saved!')
             return redirect('equipmentsList',pk=pk)
@@ -136,7 +136,7 @@ def EquipmentView(request,pk):
         }
     return render(request, 'sportapp/add_equipment.html', context)    
    raise Http404("Page does not exist")      
-def addgeneral(request):
+def addgeneral(request):                           #adding general equipments view
   if issup(request) or isgen(request):  
     if request.method == 'POST':
         form = generalequipmentform(request.POST)
@@ -152,15 +152,15 @@ def addgeneral(request):
         }
     return render(request, 'sportapp/add_equipment.html', context) 
   raise Http404("Page does not exist")        
-def alphabet(d):
+def alphabet(d):                  #function for sorting based on name of the equipments
     return d.name           
-def EquipmentListView(request,pk):
+def EquipmentListView(request,pk):          #Equipment list view
    if request.user.email == clubs.objects.get(pk=pk).email or isgen(request) or issup(request):
     clubs_list=clubs.objects.all()
-    club=clubs.objects.get(pk=pk)
-    equipments=club.equipment_set.all()
-    equipments1=list(equipments)
-    equipments1.sort(key=alphabet)
+    club=clubs.objects.get(pk=pk)             # retrieving the required club
+    equipments=club.equipment_set.all()       # all equipments of the required club
+    equipments1=list(equipments)              # converting the equipments in the required club to list data type to sort them in alphabetical order
+    equipments1.sort(key=alphabet)            
     c=club.name
     superin=0
     gensec=0
@@ -174,29 +174,27 @@ def EquipmentListView(request,pk):
              'clubs_list': clubs_list,
              'pk': pk,
             'equipments':equipments1,
-            'c':c,
             'super':superin,
             'gensec':gensec
         }
      return render(request, 'sportapp/equipments_list.html', context)     
-    else :
-       clubs_list=clubs.objects.filter(email=request.user.email)
+    else :                                                   # for secy view
+       clubs_list=clubs.objects.filter(email=request.user.email)       # one club should be visible for secy in side bar(so retrieving the club)
        context = {
              'clubs_list': clubs_list,
              'pk': pk,
             'equipments':equipments1,
-            'c':c,
             'super':superin,
             'gensec':gensec
         }
        return render(request, 'sportapp/equipments_list.html', context)      
    else:
-       raise Http404("Page does not exist")
+       raise Http404("Page does not exist")  
 
-def general(request):
+def general(request):                #General equipment list view
     clubs_list=clubs.objects.all()
     equipments=generalequipment.objects.all()
-    equipments1=list(equipments)
+    equipments1=list(equipments)       
 
     equipments1.sort(key=alphabet)
     superin=0
@@ -225,37 +223,35 @@ def general(request):
        return render(request,'sportapp/general.html',context)
 
 
-def deleteEquipmentView(request,id,pk):
+def deleteEquipmentView(request,id,pk):         #deleting equipments of club  
  if isgen(request) or issup(request)  : 
     if isgen(request) or issup(request) :
-     a=equipment.objects.filter(id=id)
+     a=equipment.objects.filter(id=id)              # id of the equipment
      a.delete()
-     return redirect('equipmentsList',pk=pk)
+     return redirect('equipmentsList',pk=pk)        # pk of the club
  else :
     raise Http404("Page does not exist")     
 
-def generaldelete(request,id):
+def generaldelete(request,id):                     # deleting general equipments
   if isgen(request) or issup(request):  
     a=generalequipment.objects.get(pk=id)
     a.delete()
-    return redirect('general')
+    return redirect('general')                    # redirecting to general equipments list
   else :
     raise Http404("Page does not exist")
-def IssueFormView(request,pk,id):
+def IssueFormView(request,pk,id):                # issuing club equipments
    if not issup(request): 
-    equip=get_object_or_404(equipment, id=id)
+    equip=get_object_or_404(equipment, id=id)        # id of the equipment to te issued
    
     if request.method == 'POST':
 
         form = IssueForm(request.POST)
         if form.is_valid():
-         post = form.save(commit=False)
-            
-         quantity = equip.available_quantity-post.quantity
-         post.equipment_name= equip
+         post = form.save(commit=False)       
+         post.equipment_name= equip                # linking equipment to the issue
          post.remark=None
          if isgen(request) :
-             post.is_gen=1
+             post.is_gen=1                         # if issued by general secy
          else :
              post.is_gen=0
              post.user=equip.sport
@@ -269,19 +265,18 @@ def IssueFormView(request,pk,id):
         form = IssueForm()
         context = {
             'form':form,
-            'maximum_value':equip.available_quantity
+            'maximum_value':equip.available_quantity                  # maximum quantity can be issued passed to html
         }
         return render(request, 'sportapp/Issue.html', context)      
    raise Http404("Page does not exist")
 
-def generalissue(request,pk):
+def generalissue(request,pk):                           # issuing general equipments
   if not issup(request): 
     equip=get_object_or_404(generalequipment, pk=pk)
     if request.method == 'POST':
         form = IssueForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)  
-            quantity = equip.available_quantity-post.quantity
             post.general_equipname=equip
             post.remark=None
             
@@ -301,17 +296,17 @@ def generalissue(request,pk):
     return render(request, 'sportapp/Issue.html', {'form':form,'maximum_value':equip.available_quantity})      
   raise Http404("Page does not exist")
 
-def myfuc(d):  
+def myfuc(d):         #function to sort issues based on date
     return d.date
-def IssueListView(request,pk):
+def IssueListView(request,pk):     # list of issues of club equipments by gen sec and club secy  and general equipment issues by club secy
    if request.user.email == clubs.objects.get(pk=pk).email or isgen(request) or issup(request):
     clubs_list=clubs.objects.all()
-    club=clubs.objects.get(pk=pk)
+    club=clubs.objects.get(pk=pk)          
     equipments=club.equipment_set.all()
     
     tot_list=issue.objects.all()
     issue_list=[]
-    secy=clubs.objects.get(pk=pk).email 
+    secy=clubs.objects.get(pk=pk).email    # get the secy of the required club
     genlist=set()
     
     for equip in equipments:
@@ -359,7 +354,7 @@ def IssueListView(request,pk):
    else:
        raise Http404("Page does not exist")
 
-def generallist(request):
+def generallist(request):                # issues of general equipments
     clubs_list=clubs.objects.all() 
     issue_list=issue.objects.filter(equipment_name=None)
     
@@ -379,7 +374,7 @@ def generallist(request):
         return render(request, 'sportapp/Issue_list.html', context)    
 
     
-def gensecissuelist(request):
+def gensecissuelist(request):          # all issues by general secretary
    if isgen(request):
        issue_list=issue.objects.filter(is_gen=1) 
        iss=[]
@@ -389,7 +384,7 @@ def gensecissuelist(request):
        context={'issue_list':iss,'clubs_list':allclubs(),'gensec':1,'super':issup(request)}
        return render(request,'sportapp/Issue_list.html',context)  
    raise Http404("Pasge does not exist")    
-def returnequipment(request,pk,id):
+def returnequipment(request,pk,id):         # returning equipments of club
    if not issup(request):  
     if request.method == 'POST':
         eq=get_object_or_404(equipment,pk=id)
@@ -418,7 +413,7 @@ def returnequipment(request,pk,id):
         }
         return render(request, 'sportapp/return_form.html', context)    
    raise Http404("Page does not exist")
-def generalreturn(request,id):
+def generalreturn(request,id):           #returning general equipments
    if not issup(request):  
     if request.method == 'POST':
         eq=get_object_or_404(generalequipment,pk=id)
@@ -450,7 +445,7 @@ def generalreturn(request,id):
 
 
 
-def superindent(request):
+def superindent(request):            # issue and return requests to superindent
    
     if issup(request):
         iss=issue.objects.filter(is_pending=True)
@@ -466,7 +461,7 @@ def superindent(request):
         return render(request,'sportapp/superindent.html',context)  
     else :        
      raise Http404("Page does not exist")
-def accept(request,pk):
+def accept(request,pk):             #accepting issue or return by superindent
   if issup(request):   
    if request.method=='POST': 
     form=remarkform(request.POST)
@@ -504,7 +499,7 @@ def accept(request,pk):
   else :        
      raise Http404("Page does not exist")  
 
-def deny(request,pk):
+def deny(request,pk):          # denying issue or return requests by superindent
  if issup(request):     
   if request.method=='POST': 
     form=remarkform(request.POST)
