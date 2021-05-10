@@ -160,7 +160,6 @@ def EquipmentListView(request,pk):
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
     equipments1=list(equipments)
-
     equipments1.sort(key=alphabet)
     c=club.name
     superin=0
@@ -185,7 +184,7 @@ def EquipmentListView(request,pk):
        context = {
              'clubs_list': clubs_list,
              'pk': pk,
-            'equipments':equipments,
+            'equipments':equipments1,
             'c':c,
             'super':superin,
             'gensec':gensec
@@ -219,7 +218,7 @@ def general(request):
        clubs_list=clubs.objects.filter(email=request.user.email)
        context = {
              'clubs_list': clubs_list,
-            'equipments':equipments,
+            'equipments':equipments1,
             'super':superin,'gensec':gensec
         }
      
