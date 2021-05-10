@@ -45,6 +45,7 @@
           <th>club</th>
           <th>club_secy</th>
             <th>equipment Name</th>
+            <th>specification</th>
             <th>Quantity</th>
             <th>Date</th>
             <th>status</th>
@@ -60,7 +61,7 @@
         {%if obj.equipment_name %}
         <td>{{obj.equipment_name.sport}}</td>
         {%else %}
-        <td>{{obj.general_equipname.sport}}</td>
+        <td>General</td>
         {% endif %}
         {% if obj.is_gen%}
         <td>General Secy</td>
@@ -69,8 +70,10 @@
         {% endif %}
         {%if obj.equipment_name %}
         <td>{{obj.equipment_name.name}}</td>
+        <td>{{obj.equipment_name.specification}}</td>
         {%else %}
         <td>{{obj.general_equipname.name}}</td>
+        <td>{{obj.general_equipname.specification}}</td>
         {% endif %}
         <td>{{obj.quantity}}</td>
         <td>{{obj.date}}</td>

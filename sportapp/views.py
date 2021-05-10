@@ -152,12 +152,16 @@ def addgeneral(request):
         }
     return render(request, 'sportapp/add_equipment.html', context) 
   raise Http404("Page does not exist")        
-           
+def alphabet(d):
+    return d.name           
 def EquipmentListView(request,pk):
    if request.user.email == clubs.objects.get(pk=pk).email or isgen(request) or issup(request):
     clubs_list=clubs.objects.all()
     club=clubs.objects.get(pk=pk)
     equipments=club.equipment_set.all()
+    equipments1=list(equipments)
+
+    equipments1.sort(key=alphabet)
     c=club.name
     superin=0
     gensec=0
@@ -170,7 +174,7 @@ def EquipmentListView(request,pk):
      context = {
              'clubs_list': clubs_list,
              'pk': pk,
-            'equipments':equipments,
+            'equipments':equipments1,
             'c':c,
             'super':superin,
             'gensec':gensec
@@ -193,6 +197,9 @@ def EquipmentListView(request,pk):
 def general(request):
     clubs_list=clubs.objects.all()
     equipments=generalequipment.objects.all()
+    equipments1=list(equipments)
+
+    equipments1.sort(key=alphabet)
     superin=0
     gensec=0
     
@@ -203,7 +210,7 @@ def general(request):
     if gensec or superin :
       context = {
              'clubs_list': clubs_list,
-            'equipments':equipments,
+            'equipments':equipments1,
             'super':superin,'gensec':gensec
         }
      
@@ -380,6 +387,7 @@ def gensecissuelist(request):
        iss.reverse()
        context={'issue_list':iss,'clubs_list':allclubs(),'gensec':1,'super':issup(request)}
        return render(request,'sportapp/Issue_list.html',context)  
+   raise Http404("Pasge does not exist")    
 def returnequipment(request,pk,id):
     if request.method == 'POST':
         eq=get_object_or_404(equipment,pk=id)
@@ -488,7 +496,7 @@ def accept(request,pk):
     return redirect('superindent')
    
    else: 
-     form=remarkform()
+     form=remarkform(initial={'remark': "None" })
      return render(request,'sportapp/remarkform.html',{'form':form})  
   else :        
      raise Http404("Page does not exist")  
