@@ -6,7 +6,8 @@ import uuid
 from sportapp import views
 
 urlpatterns = [
-    path('',views.Index,name='Home'),
+    path('', views.Home1, name='Home1'),
+    path('home/',views.Index,name='Home'),
     path('AddClub/', views.ClubsView, name='clubs'),
     path('superindent/', views.superindent, name='superindent'),
     path('accept/<pk>', views.accept, name='accept'),

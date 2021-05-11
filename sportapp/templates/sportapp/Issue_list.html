@@ -48,7 +48,9 @@
 
 
 <div class="main">
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+  <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
   <select id="location-select" name="locationselect">
     <option value="">All</option>
     <option value="issued">Issued</option>
@@ -58,17 +60,15 @@
   </select>
   <span id="filter-select-count"></span>
     <h1>
-        Issue list
+        Issue History
     </h1>
     {% if issue_list %}
-    <table style="width:100%" class="styled-table" id = "myTable">
+    <table style="width:100%" class="styled-table" id="myTable" >
       <thead>
         <tr>
           <th>sno</th>
-          {% if not super%}
           <th>student name</th>
           <th>roll number</th>
-          {%  endif %}
             <th>equipment Name</th>
             <th>specification</th>
             <th>Quantity</th>
@@ -83,10 +83,8 @@
       {% for obj in issue_list %}
       <tr>
        <td></td>
-       {% if not super %}
         <td>{{obj.name}}</td>
         <td>{{obj.roll}}</td>
-        {% endif %}
         {%if obj.equipment_name %}
         <td>{{obj.equipment_name.name}}</td>
         <td>{{obj.equipment_name.specification}}</td>
@@ -135,8 +133,7 @@
   {% endif %}
 </div>
 
- <script>
-
+<script>
 
 $(document).ready(function(){
 
@@ -153,7 +150,6 @@ $(document).ready(function(){
 
             if (id.indexOf(locationSelect) !== 0) {
                 $row.hide();
-              //  $row.style.display = 'none'
             }
             else {
                 $row.show();
@@ -161,43 +157,38 @@ $(document).ready(function(){
 
             }
         }
+
     });
 
 
-        // Update the count
-        var numberItems = count;
-        $("#filter-select-count").text("Results = "+count);
+
     });
 });
-  </script> 
 
-<script>
 
-  
-  function myFunction() {
-    var input, filter, table, tr, td, i, txtValue;
+function myFunction() {
+    var input, filter, table, tr, td, i, txtValue,locationSelect;
     input = document.getElementById("myInput");
-    console.log(input)
+    locationSelect= $( "#location-select" ).val();
+
     filter = input.value.toUpperCase();
     table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr"); 
-    
+    tr = table.getElementsByTagName("tr");
     for (i = 1; i < tr.length; i++) {
-     
-       
-    
       var tds = tr[i].getElementsByTagName("td");
 
     // hide the row
     tr[i].style.display = "none";
 
     // loop through row cells
-    for (var i2 = 1; i2 <8   ; i2++) {
-          if(i2!==5 || i2!==6 ){
+    for (var i2 = 1; i2 < 4; i2++) {
+
       // if there's a match
-      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1) {
+      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1 ) {
+
 
         // show the row
+        if(tds[9].innerHTML.indexOf(locationSelect)>-1)
         tr[i].style.display = "";
 
         // skip to the next row
@@ -205,11 +196,11 @@ $(document).ready(function(){
 
       }
     }
-    }
-  
-    }
+  }
 }
   </script>
+
+
 <script src="../../static/sidebar.js">
 </script>
 

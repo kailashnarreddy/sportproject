@@ -8,7 +8,7 @@
 
 </head>
 <body>
- 
+
 <div class="sidenav">
       {% if gensec or super%}
     <a href="{% url 'clubsList' %}">Secys</a>
@@ -18,20 +18,20 @@
     {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
-   
-  <button class="dropdown-btn">{{club.name}} 
+
+  <button class="dropdown-btn">{{club.name}}
     <i class="fa fa-caret-down"></i>
     </button>
-   
+
 
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
     <a href="{% url 'IssueList' club.pk %}">Issue History</a>
   </div>
-  {% endfor %}   
+  {% endfor %}
   {% endif %}
-   <button class="dropdown-btn">General items 
+   <button class="dropdown-btn">General items
     <i class="fa fa-caret-down"></i>
   </button>
   <div class="dropdown-container">
@@ -54,7 +54,7 @@
     </h1>
      {% endif %}
      {% if super %}
-     
+
      <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
     <h1>
         Equipments list
@@ -71,14 +71,14 @@
             <th>Total Quantity</th>
             <th>Available Quantity</th>
             {%if super or gensec%}
-           
+
             <th>Delete</th>
              {% endif %}
             {% if not super %}
             <th>Issue</th>
             <th>Return</th>
             {% endif %}
-           
+
         </tr>
       </thead>
       <tbody>
@@ -103,7 +103,7 @@
 </table>
   {% else %}
     <p>There are no Equipments </p>
-  {% endif %} 
+  {% endif %}
 
 </div>
 <script>
