@@ -32,7 +32,8 @@ def allclubs() :
     return clubs_list
     
 # Create your views here.
-
+def Home1(request):
+    return render(request,'sportapp/home1.html')
 def Index(request):                                    # home page view
     clubs_list=clubs.objects.all()
   

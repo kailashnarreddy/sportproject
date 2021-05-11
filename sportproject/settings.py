@@ -124,10 +124,10 @@ AUTH_ADFS = {
     'USERNAME_CLAIM': 'upn',
     'TENANT_ID': tenant_id,
     'RELYING_PARTY_ID': client_id,
-    'LOGIN_EXEMPT_URLS':[],
+    'LOGIN_EXEMPT_URLS':[''],
 }
 LOGIN_URL = "django_auth_adfs:login"
-LOGIN_REDIRECT_URL = "sportapp/general"
+LOGIN_REDIRECT_URL = "Home"
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
