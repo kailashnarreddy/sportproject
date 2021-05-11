@@ -41,7 +41,7 @@
     {% if gensec %}
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
   {% endif %}
-  <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
+  <a href="{% url 'django_auth_adfs:logout' %}">Logout</a> 
 
 </div>
 
@@ -102,6 +102,9 @@
       </tbody>
 </table>
   {% else %}
+  <h1>
+    Equipments list
+  </h1>
     <p>There are no Equipments </p>
   {% endif %} 
 
