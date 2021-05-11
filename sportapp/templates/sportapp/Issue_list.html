@@ -1,5 +1,4 @@
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,27 +7,31 @@
 <link rel="stylesheet" type="text/css" href="../../static/sidebar.css">
 
 </head>
+
+
+
+
 <body>
- 
+
 <div class="sidenav">
  {% if gensec or super %}
     <a href="{% url 'clubsList' %}">Secys</a>
     {% endif %}
     {%if super %}
-    <a href="{% url 'superindent' %}">Superindent</a>
+    <a href="{% url 'superindent' %}">Pending Requests</a>
     {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
-  <button class="dropdown-btn">{{club.name}} 
+  <button class="dropdown-btn">{{club.name}}
     <i class="fa fa-caret-down"></i>
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
     <a href="{% url 'IssueList' club.pk %}">Issue History</a>
   </div>
-  {% endfor %}   
+  {% endfor %}
   {% endif %}
-    <button class="dropdown-btn">General items 
+    <button class="dropdown-btn">General items
     <i class="fa fa-caret-down"></i>
   </button>
   <div class="dropdown-container">
@@ -41,18 +44,31 @@
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
 <div class="main">
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+  <select id="location-select" name="locationselect">
+    <option value="">All</option>
+    <option value="issued">Issued</option>
+    <option value="returned">Returned</option>
+    <option value="issue request pending">Issue request pending</option>
+    <option value="return request pending">Return request pending</option>
+  </select>
+  <span id="filter-select-count"></span>
     <h1>
-        Issue list  
+        Issue list
     </h1>
     {% if issue_list %}
-    <table style="width:100%" class="styled-table" id="myTable">
+    <table style="width:100%" class="styled-table" id = "myTable">
       <thead>
         <tr>
           <th>sno</th>
+          {% if not super%}
           <th>student name</th>
           <th>roll number</th>
+          {%  endif %}
             <th>equipment Name</th>
             <th>specification</th>
             <th>Quantity</th>
@@ -60,15 +76,17 @@
             <th>Issued To </th>
             <th>Remark</th>
             <th>status</th>
-            
+
         </tr>
       </thead>
       <tbody>
       {% for obj in issue_list %}
       <tr>
-      <td></td>
+       <td></td>
+       {% if not super %}
         <td>{{obj.name}}</td>
         <td>{{obj.roll}}</td>
+        {% endif %}
         {%if obj.equipment_name %}
         <td>{{obj.equipment_name.name}}</td>
         <td>{{obj.equipment_name.specification}}</td>
@@ -76,7 +94,7 @@
         <td>{{obj.general_equipname.name}}</td>
         <td>{{obj.general_equipname.specification}}
         {% endif %}
-        
+
         <td>{{obj.quantity}}</td>
         <td>{{obj.date}}</td>
         {% if obj.is_gen%}
@@ -85,7 +103,7 @@
         <td>{{ obj.user.name }} Club secy</td>
         {% endif %}
         <td>{{obj.remark}}</td>
-        {% if obj.is_return  %}        
+        {% if obj.is_return  %}
         {% if obj.is_pending %}
         <td>return request pending</td>
         {% else %}
@@ -100,40 +118,82 @@
         <td>issue request pending</td>
         {% else %}
         {%if obj.req%}
-       <td> issued</td>
+       <td>issued</td>
        {%else%}
        <td>issue denied</td>
        {%endif%}
         {% endif %}
         {% endif %}
-      
-        
+
+
       </tr>
     {% endfor %}
   </tbody>
 </table>
   {% else %}
     <p>There are no Issue_Equipments </p>
-  {% endif %} 
+  {% endif %}
 </div>
 
+ <script>
+
+
+$(document).ready(function(){
+
+  $("#location-select").change(function(){
+        // Retrieve the option value and reset the count to zero
+        var locationSelect = $(this).val(), count = 0;
+
+        $("table tr").each(function(index) {
+        if (index !== 0) {
+
+            $row = $(this);
+
+            var id = $row.find("td:eq(9)").text();
+
+            if (id.indexOf(locationSelect) !== 0) {
+                $row.hide();
+              //  $row.style.display = 'none'
+            }
+            else {
+                $row.show();
+                count++;
+
+            }
+        }
+    });
+
+
+        // Update the count
+        var numberItems = count;
+        $("#filter-select-count").text("Results = "+count);
+    });
+});
+  </script> 
+
 <script>
+
+  
   function myFunction() {
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
     console.log(input)
     filter = input.value.toUpperCase();
     table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
+    tr = table.getElementsByTagName("tr"); 
+    
     for (i = 1; i < tr.length; i++) {
+     
+       
+    
       var tds = tr[i].getElementsByTagName("td");
 
     // hide the row
     tr[i].style.display = "none";
 
     // loop through row cells
-    for (var i2 = 1; i2 < 5; i2++) {
-
+    for (var i2 = 1; i2 <8   ; i2++) {
+          if(i2!==5 || i2!==6 ){
       // if there's a match
       if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1) {
 
@@ -145,16 +205,13 @@
 
       }
     }
-  }
+    }
+  
+    }
 }
   </script>
-
-
 <script src="../../static/sidebar.js">
 </script>
 
-
-
 </body>
-</html>  
-
+</html>

@@ -15,7 +15,7 @@
     {% endif %}
 
     {%if super%}
-    <a href="{% url 'superindent' %}">Superindent</a>
+    <a href="{% url 'superindent' %}">Pending Requests</a>
     {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
@@ -47,10 +47,12 @@
 </div>
 
 <div class="main">
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+ 
 <h1>
         General Equipments list
     </h1>
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+    
 {% if gensec or super %}
     <a href="{% url 'addgeneral' %}" class="myButton">Add Equipments</a>
     
@@ -131,6 +133,7 @@
     }
   }
 }
+
   </script>
 
 <script src="../../static/sidebar.js">
