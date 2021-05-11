@@ -12,17 +12,15 @@ from django.http import HttpResponse,Http404
 from datetime import datetime
 
 
-
-
 def isgen(request):
-    if request.user.email=="bkartheek@iitg.ac.in":    # mail id of General Secretary
+
         return True
     else :
         return False    
 
 
 def issup(request):
-    if request.user.email=="n.kailash@iitg.ac.in":     # mail id of Superindent
+    if request.user.email=="":     # mail id of Superindent
         return True
     else :
         return False    
