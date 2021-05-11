@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../../static/sidebar.css">
+<link rel="stylesheet" type="text/css" href="../../static/style.css">
+   <style>
+      DIV.container {
+     margin: 0;
+
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+        }
+        
+
+      </style>
+
+</head>
+<body>
+
+
+<div class="main">
+
+    
+    <div class="container">
+    <h1> Welcome to sports board !! :)</h1>
+      <img class="w-full md:w-4/5 z-50" width="400" src="{% static 'iitg_logo.svg.png' %}" />
+
+
+        </div>
+        
+        <a href="{% url 'django_auth_adfs:login' %}" > <button class="blueb">Login</button> </a>
+        
+</div>
+
+</body>
+</html>
+

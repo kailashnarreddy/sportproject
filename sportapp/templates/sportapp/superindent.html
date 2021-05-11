@@ -12,7 +12,7 @@
 <div class="sidenav">
      
     <a href="{% url 'clubsList' %}">Secys</a>
-    <a href="{% url 'superindent' %}">Superindent</a>
+    <a href="{% url 'superindent' %}" >Pending Requests</a>
     {% if clubs_list %}
     {% for club in clubs_list %}
   <button class="dropdown-btn">{{club.name}} 
@@ -90,7 +90,7 @@
   </tbody>
 </table>
   {% else %}
-    <p>There are no Issue_Equipments </p>
+    <p>There are no Pending Requests </p>
   {% endif %} 
 </div>
 <script>

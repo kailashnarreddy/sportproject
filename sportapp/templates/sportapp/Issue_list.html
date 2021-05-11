@@ -10,28 +10,28 @@
 
 
 
-  
+
 <body>
- 
+
 <div class="sidenav">
  {% if gensec or super %}
     <a href="{% url 'clubsList' %}">Secys</a>
     {% endif %}
     {%if super %}
-    <a href="{% url 'superindent' %}">Superindent</a>
+    <a href="{% url 'superindent' %}">Pending Requests</a>
     {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
-  <button class="dropdown-btn">{{club.name}} 
+  <button class="dropdown-btn">{{club.name}}
     <i class="fa fa-caret-down"></i>
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
     <a href="{% url 'IssueList' club.pk %}">Issue History</a>
   </div>
-  {% endfor %}   
+  {% endfor %}
   {% endif %}
-    <button class="dropdown-btn">General items 
+    <button class="dropdown-btn">General items
     <i class="fa fa-caret-down"></i>
   </button>
   <div class="dropdown-container">
@@ -48,6 +48,9 @@
 
 
 <div class="main">
+
+  <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
   <select id="location-select" name="locationselect">
     <option value="">All</option>
     <option value="issued">Issued</option>
@@ -57,10 +60,10 @@
   </select>
   <span id="filter-select-count"></span>
     <h1>
-        Issue list  
+        Issue History
     </h1>
     {% if issue_list %}
-    <table style="width:100%" class="styled-table" >
+    <table style="width:100%" class="styled-table" id="myTable" >
       <thead>
         <tr>
           <th>sno</th>
@@ -73,7 +76,7 @@
             <th>Issued To </th>
             <th>Remark</th>
             <th>status</th>
-            
+
         </tr>
       </thead>
       <tbody>
@@ -89,7 +92,7 @@
         <td>{{obj.general_equipname.name}}</td>
         <td>{{obj.general_equipname.specification}}
         {% endif %}
-        
+
         <td>{{obj.quantity}}</td>
         <td>{{obj.date}}</td>
         {% if obj.is_gen%}
@@ -98,7 +101,7 @@
         <td>{{ obj.user.name }} Club secy</td>
         {% endif %}
         <td>{{obj.remark}}</td>
-        {% if obj.is_return  %}        
+        {% if obj.is_return  %}
         {% if obj.is_pending %}
         <td>return request pending</td>
         {% else %}
@@ -119,32 +122,32 @@
        {%endif%}
         {% endif %}
         {% endif %}
-      
-        
+
+
       </tr>
     {% endfor %}
   </tbody>
 </table>
   {% else %}
     <p>There are no Issue_Equipments </p>
-  {% endif %} 
+  {% endif %}
 </div>
 
 <script>
-  
+
 $(document).ready(function(){
-  
+
   $("#location-select").change(function(){
         // Retrieve the option value and reset the count to zero
         var locationSelect = $(this).val(), count = 0;
-        
+
         $("table tr").each(function(index) {
         if (index !== 0) {
 
             $row = $(this);
 
             var id = $row.find("td:eq(9)").text();
-          
+
             if (id.indexOf(locationSelect) !== 0) {
                 $row.hide();
             }
@@ -154,14 +157,46 @@ $(document).ready(function(){
 
             }
         }
+
     });
-        
-        
-        // Update the count
-        var numberItems = count;
-        $("#filter-select-count").text("*Results = "+count);
+
     });
+      
 });
+
+
+function myFunction() {
+    var input, filter, table, tr, td, i, txtValue,locationSelect;
+    input = document.getElementById("myInput");
+    locationSelect= $( "#location-select" ).val();
+
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) {
+      var tds = tr[i].getElementsByTagName("td");
+
+    // hide the row
+    tr[i].style.display = "none";
+
+    // loop through row cells
+    for (var i2 = 1; i2 < 4; i2++) {
+
+      // if there's a match
+      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1 ) {
+
+
+        // show the row
+        if(tds[9].innerHTML.indexOf(locationSelect)>-1)
+        tr[i].style.display = "";
+
+        // skip to the next row
+        continue;
+
+      }
+    }
+  }
+}
   </script>
 
 
@@ -169,4 +204,4 @@ $(document).ready(function(){
 </script>
 
 </body>
-</html>  
+</html>
