@@ -47,13 +47,15 @@
 
 <div class="main">
 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-{% if gensec or super %}
+{% if gensec %}
     <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
     <h1>
         Equipments list
     </h1>
-    {% else %}
+     {% endif %}
+     {% if super %}
 
+     <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
     <h1>
         Equipments list
     </h1>
@@ -100,6 +102,7 @@
       </tbody>
 </table>
   {% else %}
+  
     <p>There are no Equipments </p>
   {% endif %}
 
