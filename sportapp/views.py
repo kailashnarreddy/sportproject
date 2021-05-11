@@ -15,7 +15,7 @@ from datetime import datetime
 
 
 def isgen(request):
-    if request.user.email=="prathapa@iitg.ac.in":    # mail id of General Secretary
+    if request.user.email=="bkartheek@iitg.ac.in":    # mail id of General Secretary
         return True
     else :
         return False    
