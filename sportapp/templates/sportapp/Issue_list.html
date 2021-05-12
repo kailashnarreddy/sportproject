@@ -18,7 +18,7 @@
     <a href="{% url 'clubsList' %}">Secys</a>
     {% endif %}
     {%if super %}
-    <a href="{% url 'superindent' %}">Pending Requests</a>
+    <a href="{% url 'superindent' 0 %}">Pending Requests</a>
     {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
@@ -41,6 +41,9 @@
     {% if gensec %}
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
   {% endif %}
+  {% if gensec or super %}
+    <a href="{% url 'total_list' %}"> Total Issues </a> 
+    {% endif %}
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
 </div>
 
@@ -54,11 +57,14 @@
   <select id="location-select" name="locationselect">
     <option value="">All</option>
     <option value="issued">Issued</option>
+      <option value="issue denied">Issue denied</option>
     <option value="returned">Returned</option>
+   
+    <option value="return denied">Return denied</option>
     <option value="issue request pending">Issue request pending</option>
     <option value="return request pending">Return request pending</option>
   </select>
-  <span id="filter-select-count"></span>
+  
     <h1>
         Issue History
     </h1>
@@ -66,9 +72,12 @@
     <table style="width:100%" class="styled-table" id="myTable" >
       <thead>
         <tr>
-          <th>sno</th>
+        <th> sno </th>
+          <th>Id</th>
+          {%if not super%}
           <th>student name</th>
           <th>roll number</th>
+           {% endif %}
             <th>equipment Name</th>
             <th>specification</th>
             <th>Quantity</th>
@@ -82,9 +91,12 @@
       <tbody>
       {% for obj in issue_list %}
       <tr>
-       <td></td>
+      <td></td>
+       <td>{{obj.pk}}</td>
+        {% if not super%}
         <td>{{obj.name}}</td>
         <td>{{obj.roll}}</td>
+         {% endif %}
         {%if obj.equipment_name %}
         <td>{{obj.equipment_name.name}}</td>
         <td>{{obj.equipment_name.specification}}</td>
@@ -103,22 +115,22 @@
         <td>{{obj.remark}}</td>
         {% if obj.is_return  %}
         {% if obj.is_pending %}
-        <td>return request pending</td>
+        <td class="pendingyellow">return request pending</td>
         {% else %}
         {% if obj.req%}
-        <td>returned</td>
+         <td class="acceptgreen">returned</td>
         {%else%}
-        <td>return denied</td>
+           <td class="deniedred">return denied</td>
         {% endif %}
         {% endif %}
         {% else %}
         {% if obj.is_pending %}
-        <td>issue request pending</td>
+        <td class="pendingyellow">issue request pending</td>
         {% else %}
         {%if obj.req%}
-       <td>issued</td>
+        <td class="acceptgreen">issued</td>
        {%else%}
-       <td>issue denied</td>
+       <td class="deniedred">issue denied</td>
        {%endif%}
         {% endif %}
         {% endif %}
@@ -132,7 +144,7 @@
     <p>There are no Issue_Equipments </p>
   {% endif %}
 </div>
-
+ {% if not super %}
 <script>
 
 $(document).ready(function(){
@@ -146,7 +158,7 @@ $(document).ready(function(){
 
             $row = $(this);
 
-            var id = $row.find("td:eq(9)").text();
+            var id = $row.find("td:eq(10)").text();
 
             if (id.indexOf(locationSelect) !== 0) {
                 $row.hide();
@@ -159,6 +171,8 @@ $(document).ready(function(){
         }
 
     });
+        var numberItems = count;
+        $("#filter-select-count").text("*Results = "+count);
 
     });
       
@@ -180,14 +194,14 @@ function myFunction() {
     tr[i].style.display = "none";
 
     // loop through row cells
-    for (var i2 = 1; i2 < 4; i2++) {
+    for (var i2 = 1; i2 <=4; i2++) {
 
       // if there's a match
       if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1 ) {
 
 
         // show the row
-        if(tds[9].innerHTML.indexOf(locationSelect)>-1)
+        if(tds[10].innerHTML.indexOf(locationSelect)>-1)
         tr[i].style.display = "";
 
         // skip to the next row
@@ -198,7 +212,76 @@ function myFunction() {
   }
 }
   </script>
+{% endif %}
 
+{% if  super %}
+<script>
+
+$(document).ready(function(){
+
+  $("#location-select").change(function(){
+        // Retrieve the option value and reset the count to zero
+        var locationSelect = $(this).val(), count = 0;
+
+        $("table tr").each(function(index) {
+        if (index !== 0) {
+
+            $row = $(this);
+
+            var id = $row.find("td:eq(8)").text();
+
+            if (id.indexOf(locationSelect) !== 0) {
+                $row.hide();
+            }
+            else {
+                $row.show();
+                count++;
+
+            }
+        }
+
+    });
+        
+
+    });
+      
+});
+
+
+function myFunction() {
+    var input, filter, table, tr, td, i, txtValue,locationSelect;
+    input = document.getElementById("myInput");
+    locationSelect= $( "#location-select" ).val();
+
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) {
+      var tds = tr[i].getElementsByTagName("td");
+
+    // hide the row
+    tr[i].style.display = "none";
+
+    // loop through row cells
+    for (var i2 = 1; i2 <=3; i2++) {
+
+      // if there's a match
+      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1 ) {
+
+
+        // show the row
+        if(tds[8].innerHTML.indexOf(locationSelect)>-1)
+        tr[i].style.display = "";
+
+        // skip to the next row
+        continue;
+
+      }
+    }
+  }
+}
+  </script>
+{% endif %}
 
 <script src="../../static/sidebar.js">
 </script>

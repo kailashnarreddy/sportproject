@@ -63,7 +63,7 @@
   
   /* Add an active class to the active dropdown button */
   .active {
-    background-color:teal;
+    background-color:red;
     color: white;
   }
   

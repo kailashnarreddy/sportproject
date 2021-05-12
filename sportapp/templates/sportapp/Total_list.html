@@ -1,44 +1,288 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>Home page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../../static/style.css">
+<link rel="stylesheet" type="text/css" href="../../static/sidebar.css">
+
 </head>
 
-<style>
-    table, th, td {
-      border: 1px solid black;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 5px;
-      text-align: left;    
-    }
- </style>
+
+
 
 <body>
+
+<div class="sidenav">
+ {% if gensec or super %}
+    <a href="{% url 'clubsList' %}">Secys</a>
+    {% endif %}
+    {%if super %}
+    <a href="{% url 'superindent' 0 %}">Pending Requests</a>
+    {% endif %}
+    {% if clubs_list %}
+    {% for club in clubs_list %}
+  <button class="dropdown-btn">{{club.name}}
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+    <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
+    <a href="{% url 'IssueList' club.pk %}">Issue History</a>
+  </div>
+  {% endfor %}
+  {% endif %}
+    <button class="dropdown-btn">General items
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-container">
+     <a href="{% url 'general' %}">Register stock</a>
+    <a href="{% url 'generalIssueList'   %}">Issue History</a>
+  </div>
+    {% if gensec %}
+  <a href="{% url 'gensecissuelist' %}"> My_issues</a>
+  {% endif %}
+  {% if gensec or super %}
+    <a href="{% url 'total_list' %}"> Total Issues </a> 
+    {% endif %}
+  <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+<div class="main">
+
+  <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+  <select id="location-select" name="locationselect">
+    <option value="">All</option>
+    <option value="issued">Issued</option>
+      <option value="issue denied">Issue denied</option>
+    <option value="returned">Returned</option>
+   
+    <option value="return denied">Return denied</option>
+    <option value="issue request pending">Issue request pending</option>
+    <option value="return request pending">Return request pending</option>
+  </select>
+  <span id="filter-select-count"></span>
     <h1>
-        Issue list
+        Issue History
     </h1>
     {% if issue_list %}
-    <table style="width:100%">
+    <table style="width:100%" class="styled-table" id="myTable" >
+      <thead>
         <tr>
-           
-            <th>Name</th>
+          <th>sno</th>
+          <th>Id</th>
+          {%if not super%}
+          <th>student name</th>
+          <th>roll number</th>
+           {% endif %}
+            <th>equipment Name</th>
+            <th>specification</th>
             <th>Quantity</th>
-            <th>Date of Issue</th>
-          </tr>
+            <th>Date of Issue/Return</th>
+            <th>Issued To </th>
+            <th>Remark</th>
+            <th>status</th>
+
+        </tr>
+      </thead>
+      <tbody>
       {% for obj in issue_list %}
       <tr>
-        <td>{{obj.equipment_name}}</td>
+       <td></td>
+       <td>{{obj.pk}}</td>
+        {% if not super%}
+        <td>{{obj.name}}</td>
+        <td>{{obj.roll}}</td>
+         {% endif %}
+        {%if obj.equipment_name %}
+        <td>{{obj.equipment_name.name}}</td>
+        <td>{{obj.equipment_name.specification}}</td>
+        {%else %}
+        <td>{{obj.general_equipname.name}}</td>
+        <td>{{obj.general_equipname.specification}}
+        {% endif %}
+
         <td>{{obj.quantity}}</td>
         <td>{{obj.date}}</td>
-        
+        {% if obj.is_gen%}
+        <td>Gen secy</td>
+        {%else%}
+        <td>{{ obj.user.name }} Club secy</td>
+        {% endif %}
+        <td>{{obj.remark}}</td>
+        {% if obj.is_return  %}
+        {% if obj.is_pending %}
+         <td class="pendingyellow">return request pending</td>
+        {% else %}
+        {% if obj.req%}
+           <td class="acceptgreen">returned</td>
+        {%else%}
+       <td class="deniedred">return denied</td>
+        {% endif %}
+        {% endif %}
+        {% else %}
+        {% if obj.is_pending %}
+        <td class="pendingyellow">issue request pending</td>
+        {% else %}
+        {%if obj.req%}
+        <td class="acceptgreen">issued</td>
+       {%else%}
+      <td class="deniedred">issue denied</td>
+       {%endif%}
+        {% endif %}
+        {% endif %}
+
+
       </tr>
     {% endfor %}
+  </tbody>
 </table>
   {% else %}
     <p>There are no Issue_Equipments </p>
-  {% endif %} 
+  {% endif %}
+</div>
+ {% if not super %}
+<script>
+
+$(document).ready(function(){
+
+  $("#location-select").change(function(){
+        // Retrieve the option value and reset the count to zero
+        var locationSelect = $(this).val(), count = 0;
+
+        $("table tr").each(function(index) {
+        if (index !== 0) {
+
+            $row = $(this);
+
+            var id = $row.find("td:eq(10)").text();
+
+            if (id.indexOf(locationSelect) !== 0) {
+                $row.hide();
+            }
+            else {
+                $row.show();
+                count++;
+
+            }
+        }
+
+    });
+     
+
+    });
+      
+});
+
+
+function myFunction() {
+    var input, filter, table, tr, td, i, txtValue,locationSelect;
+    input = document.getElementById("myInput");
+    locationSelect= $( "#location-select" ).val();
+
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) {
+      var tds = tr[i].getElementsByTagName("td");
+
+    // hide the row
+    tr[i].style.display = "none";
+
+    // loop through row cells
+    for (var i2 = 1; i2 <=5; i2++) {
+
+      // if there's a match
+      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1 ) {
+
+
+        // show the row
+        if(tds[10].innerHTML.indexOf(locationSelect)>-1)
+        tr[i].style.display = "";
+
+        // skip to the next row
+        continue;
+
+      }
+    }
+  }
+}
+  </script>
+{% endif %}
+
+{% if  super %}
+<script>
+
+$(document).ready(function(){
+
+  $("#location-select").change(function(){
+        // Retrieve the option value and reset the count to zero
+        var locationSelect = $(this).val(), count = 0;
+
+        $("table tr").each(function(index) {
+        if (index !== 0) {
+
+            $row = $(this);
+
+            var id = $row.find("td:eq(8)").text();
+
+            if (id.indexOf(locationSelect) !== 0) {
+                $row.hide();
+            }
+            else {
+                $row.show();
+                count++;
+
+            }
+        }
+
+    });
+        
+    });
+      
+});
+
+
+function myFunction() {
+    var input, filter, table, tr, td, i, txtValue,locationSelect;
+    input = document.getElementById("myInput");
+    locationSelect= $( "#location-select" ).val();
+
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) {
+      var tds = tr[i].getElementsByTagName("td");
+
+    // hide the row
+    tr[i].style.display = "none";
+
+    // loop through row cells
+    for (var i2 = 1; i2 <=3; i2++) {
+
+      // if there's a match
+      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1 ) {
+
+
+        // show the row
+        if(tds[8].innerHTML.indexOf(locationSelect)>-1)
+        tr[i].style.display = "";
+
+        // skip to the next row
+        continue;
+
+      }
+    }
+  }
+}
+  </script>
+{% endif %}
+
+<script src="../../static/sidebar.js">
+</script>
+
 </body>
 </html>

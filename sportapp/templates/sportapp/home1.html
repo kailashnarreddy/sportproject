@@ -5,40 +5,43 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="../../static/sidebar.css">
-<link rel="stylesheet" type="text/css" href="../../static/style.css">
+<link rel="stylesheet" type="text/css" href="../../static/sidebar.css"> 
+<link rel="stylesheet" type="text/css" href="../../static/style.css"> 
    <style>
-      DIV.container {
-     margin: 0;
-
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%)
-        }
-        
-
-      </style>
+   .content{
+     max-width:444px;
+  margin-top:1%;
+  margin-left:38%;
+}
+h1{
+  margin-top:5%;
+  max-width:444px;
+  margin-left:36%;
+}
+.blue{
+  background-color:  blue;
+    border: 2px black;
+    border-radius: 15px;
+    color: white;
+    padding: 20px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin-top:2%;
+    margin-left: 45%;
+}
+</style>
 
 </head>
 <body>
 
 
-<div class="main">
-
-    
-    <div class="container">
-    <h1> Welcome to sports board !! :)</h1>
-      <img class="w-full md:w-4/5 z-50" width="400" src="{% static 'iitg_logo.svg.png' %}" />
-
-
-        </div>
-        
-        <a href="{% url 'django_auth_adfs:login' %}" > <button class="blueb">Login</button> </a>
-        
-</div>
+  <h1> Welcome to sports board!</h1>
+  <div class="content">
+      <img  class= "image" width="350" src="{% static 'iitg_logo.svg.png' %}" /></div> 
+  </div>
+<a href="{% url 'django_auth_adfs:login' %}" > <button class="blue">Login</button></a>  
 
 </body>
 </html>
-

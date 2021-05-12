@@ -5,6 +5,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="../../static/style.css">
 <link rel="stylesheet" type="text/css" href="../../static/sidebar.css">
+<link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -12,7 +15,7 @@
 <div class="sidenav">
      
     <a href="{% url 'clubsList' %}">Secys</a>
-    <a href="{% url 'superindent' %}" >Pending Requests</a>
+    <a href="{% url 'superindent' 0 %}" >Pending Requests</a>
     {% if clubs_list %}
     {% for club in clubs_list %}
   <button class="dropdown-btn">{{club.name}} 
@@ -31,20 +34,32 @@
      <a href="{% url 'general' %}">Register stock</a>
     <a href="{% url 'generalIssueList'   %}">Issue History</a>
   </div>
+ 
+    <a href="{% url 'total_list' %}"> Total Issues </a> 
+   
  <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
 </div>
 
 <div class="main">
     <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
     <h1>Requests</h1>
+  {% for message in messages %}
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+   For ID number: {{id}} <br>
+   {{ message | safe }}
+</div>
+{% endfor %}
     {% if iss %}
     <table style="width:100%" class="styled-table" id="myTable">
       <thead>
         <tr>
-        <th>sno</th>
-          
-          <th>club</th>
-          <th>club_secy</th>
+         <th>sno</th> 
+          <th>Id</th>
+          <th>equipment club</th>
+          <th>club_secy name</th>
             <th>equipment Name</th>
             <th>specification</th>
             <th>Quantity</th>
@@ -58,16 +73,17 @@
       {% for obj in iss %}
       <tr>
         
-        <td></td>
+         <td></td> 
+        <td>{{obj.id}}</td>
         {%if obj.equipment_name %}
-        <td>{{obj.equipment_name.sport}}</td>
+        <td>{{obj.equipment_name.sport.name}}</td>
         {%else %}
         <td>General</td>
         {% endif %}
         {% if obj.is_gen%}
         <td>General Secy</td>
         {% else %}
-        <td> {{obj.user.name}} Secy    </td>
+        <td> {{obj.user.secy_name}}    </td>
         {% endif %}
         {%if obj.equipment_name %}
         <td>{{obj.equipment_name.name}}</td>
@@ -108,7 +124,7 @@
     tr[i].style.display = "none";
 
     // loop through row cells
-    for (var i2 = 1; i2 < 5; i2++) {
+    for (var i2 = 1; i2 <=5; i2++) {
 
       // if there's a match
       if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1) {
@@ -123,6 +139,7 @@
     }
   }
 }
+
   </script>
 <script src="../../static/sidebar.js">
 </script>

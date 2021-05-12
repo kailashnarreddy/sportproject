@@ -14,7 +14,7 @@
     <a href="{% url 'clubsList' %}">Secys</a>
     {% endif %}
     {% if super %}
-    <a href="{% url 'superindent' %}">Pending Requests</a>
+    <a href="{% url 'superindent' 0 %}">Pending Requests</a>
     {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
@@ -41,21 +41,24 @@
     {% if gensec %}
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
   {% endif %}
+  {% if gensec or super %}
+    <a href="{% url 'total_list' %}"> Total Issues </a> 
+    {% endif %}
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a> 
 
 </div>
 
 <div class="main">
 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-{% if gensec %}
+{% if gensec or super %}
     <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
     <h1>
         Equipments list
     </h1>
-     {% endif %}
-     {% if super %}
+     
+     {% else  %}
 
-     <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
+    
     <h1>
         Equipments list
     </h1>
@@ -102,9 +105,7 @@
       </tbody>
 </table>
   {% else %}
-  <h1>
-    Equipments list
-  </h1>
+  
     <p>There are no Equipments </p>
   {% endif %}
 
