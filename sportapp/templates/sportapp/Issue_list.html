@@ -103,26 +103,25 @@
         <td>{{obj.remark}}</td>
         {% if obj.is_return  %}
         {% if obj.is_pending %}
-        <td>return request pending</td>
+        <td class="pendingyellow">return request pending</td>
         {% else %}
         {% if obj.req%}
-        <td>returned</td>
+        <td class="acceptgreen">returned</td>
         {%else%}
-        <td>return denied</td>
+        <td class="deniedred">return denied</td>
         {% endif %}
         {% endif %}
         {% else %}
         {% if obj.is_pending %}
-        <td>issue request pending</td>
+        <td class="pendingyellow">issue request pending</td>
         {% else %}
         {%if obj.req%}
-       <td>issued</td>
+       <td class="acceptgreen">issued</td>
        {%else%}
-       <td>issue denied</td>
+       <td class="deniedred">issue denied</td>
        {%endif%}
         {% endif %}
         {% endif %}
-
 
       </tr>
     {% endfor %}
