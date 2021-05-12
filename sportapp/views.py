@@ -70,7 +70,6 @@ def ClubsView(request):                               # club adding view
         if form.is_valid():
             post = form.save(commit=False)
             post.save()
-            messages.success(request,f'Your club has been saved!')
             return redirect('clubsList')
 
     else:
