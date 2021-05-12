@@ -16,7 +16,7 @@
     {% endif %}
 
     {%if super%}
-    <a href="{% url 'superindent' %}">Superindent</a>
+    <a href="{% url 'superindent' 0 %}">Pending Requests</a>
     {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
@@ -43,15 +43,20 @@
   {% if gensec %}
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
   {% endif %}
+  {% if gensec or super %}
+    <a href="{% url 'total_list' %}"> Total Issues </a> 
+    {% endif %}
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
   
 </div>
 
 <div class="main">
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+ 
 <h1>
         General Equipments list
     </h1>
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+    
 {% if gensec or super %}
     <a href="{% url 'addgeneral' %}" class="myButton">Add Equipments</a>
     
@@ -98,6 +103,7 @@
       </tbody>
 </table>
   {% else %}
+  
     <p>There are no Equipments </p>
   {% endif %} 
 
@@ -132,6 +138,7 @@
     }
   }
 }
+
   </script>
 
 <script src="../../static/sidebar.js">

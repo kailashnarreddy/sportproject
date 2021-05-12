@@ -1,0 +1,47 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../../static/sidebar.css"> 
+<link rel="stylesheet" type="text/css" href="../../static/style.css"> 
+   <style>
+   .content{
+     max-width:444px;
+  margin-top:1%;
+  margin-left:38%;
+}
+h1{
+  margin-top:5%;
+  max-width:444px;
+  margin-left:36%;
+}
+.blue{
+  background-color:  blue;
+    border: 2px black;
+    border-radius: 15px;
+    color: white;
+    padding: 20px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin-top:2%;
+    margin-left: 45%;
+}
+</style>
+
+</head>
+<body>
+
+
+  <h1> Welcome to sports board!</h1>
+  <div class="content">
+      <img  class= "image" width="350" src="{% static 'iitg_logo.svg.png' %}" /></div> 
+  </div>
+<a href="{% url 'django_auth_adfs:login' %}" > <button class="blue">Login</button></a>  
+
+</body>
+</html>

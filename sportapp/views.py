@@ -6,23 +6,21 @@ from django.contrib import messages
 from .forms import *
 from .models import *
 from django.http import HttpResponse,Http404
-
+from django.contrib import messages
 
 
 from datetime import datetime
 
 
-
-
 def isgen(request):
-    if request.user.email=="prathapa@iitg.ac.in":    # mail id of General Secretary
+    if request.user.email=="n.kailash@iitg.ac.in":
         return True
     else :
         return False    
 
 
 def issup(request):
-    if request.user.email=="n.kailash@iitg.ac.in":     # mail id of Superindent
+    if request.user.email=="bkartheek@iitg.ac.in":     # mail id of Superindent
         return True
     else :
         return False    
@@ -32,7 +30,8 @@ def allclubs() :
     return clubs_list
     
 # Create your views here.
-
+def Home1(request):
+    return render(request,'sportapp/home1.html')
 def Index(request):                                    # home page view
     clubs_list=clubs.objects.all()
   
@@ -71,7 +70,6 @@ def ClubsView(request):                               # club adding view
         if form.is_valid():
             post = form.save(commit=False)
             post.save()
-            messages.success(request,f'Your club has been saved!')
             return redirect('clubsList')
 
     else:
@@ -445,7 +443,7 @@ def generalreturn(request,id):           #returning general equipments
 
 
 
-def superindent(request):            # issue and return requests to superindent
+def superindent(request,num):            # issue and return requests to superindent
    
     if issup(request):
         iss=issue.objects.filter(is_pending=True)
@@ -455,8 +453,7 @@ def superindent(request):            # issue and return requests to superindent
         for i in range(len(iss)):           
             suplist.append(iss[i])
         suplist.reverse()
-        context={'iss':suplist,'clubs_list':allclubs()}
-        
+        context={'iss':suplist,'clubs_list':allclubs(),'id':num}
 
         return render(request,'sportapp/superindent.html',context)  
     else :        
@@ -464,6 +461,7 @@ def superindent(request):            # issue and return requests to superindent
 def accept(request,pk):             #accepting issue or return by superindent
   if issup(request):   
    if request.method=='POST': 
+    
     form=remarkform(request.POST)
     if form.is_valid:
         post=form.save(commit=False)
@@ -491,9 +489,19 @@ def accept(request,pk):             #accepting issue or return by superindent
           
          
 
-    return redirect('superindent')
+    return redirect('superindent',0)
    
    else: 
+     iss=issue.objects.get(pk=pk)   
+     if not iss.is_return :
+       if iss.equipment_name :  
+        if  iss.equipment_name.available_quantity < iss.quantity :
+            messages.error(request, "Requested quantity is more than available quantity")
+            return redirect('superindent',iss.pk)
+       else :
+         if  iss.general_equipname.available_quantity < iss.quantity :
+            messages.error(request, "Requested quantity is more than available quantity")
+            return redirect('superindent',iss.pk)       
      form=remarkform(initial={'remark': "None" })
      return render(request,'sportapp/remarkform.html',{'form':form})  
   else :        
@@ -506,15 +514,20 @@ def deny(request,pk):          # denying issue or return requests by superindent
     if form.is_valid:
         post=form.save(commit=False)
     issue.objects.filter(pk=pk).update(is_pending=False,date=datetime.now(),remark=post.remark)
-    return redirect('superindent')
+    return redirect('superindent',0)
   else :
     form=remarkform(initial={'remark': "None" })
     return render(request,'sportapp/remarkform.html',{'form':form}) 
  else :        
      raise Http404("Page does not exist")          
 
-class TotalListView(ListView):
-    model=issue
-    template_name='sportapp/Total_list.html'
+def total_list(request):
+    if isgen(request) or issup(request) :
+        iss=issue.objects.filter(is_pending=0)
+        context={'issue_list':iss,
+                  'super':issup(request),
+                   'gensec':isgen(request),
+                    'clubs_list':allclubs()   }
+    return render(request,'sportapp/Total_list.html',context)    
 
 

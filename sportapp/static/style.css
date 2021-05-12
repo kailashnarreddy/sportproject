@@ -2,13 +2,60 @@
     font-family: 'Quicksand',sans-serif;
 }
 
+ #myInput{
+    top: 20px;
+    color:black;
+    right: 300px;
+    /* background-image: url('/css/searchicon.png');
+    background-position: 10px 10px; */
+    /* background-repeat: no-repeat;
+    background-color: #8af0db; */
+    width: 400px;
+    font-size: 15px; 
+    height:20px;
+    display: block;
+    position: absolute;
+    padding: 10px;
+    border: 3px solid #009879;
+    background:#bdeee4;
+  }
+
+  select {
+    float:right;
+    top: 20px;
+    background-repeat:no-repeat;
+    background-position:300px;
+    width: 200px;
+    padding:10px;
+    line-height:1;
+    border-radius:5px;
+    background-color:#009879;
+    color:black;
+    font-size:15px;
+    -webkit-appearance:none;
+    border:3px solid black;
+    outline:none
+    }
+
+    #filter-select-count{
+        top: 20px;
+        color:black;
+        float:left;
+        font-size: 15px; 
+        position: absolute;
+    }
+
+    select:hover {
+        color:white;
+        }
+
 .myButton {
     color:white;
     background-color: #009879;
     text-align:center;
     text-decoration: none;
     position: absolute;
-    top: 10px;
+    top: 20px;
     right: 10px;
     padding: 10px; 
     display: block;
@@ -34,6 +81,17 @@
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
+}
+.blueb{
+    background-color:  blue;
+    border: 2px black;
+    border-radius: 15px;
+    color: white;
+    padding: 20px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
 }
 .redb{
     background-color:   #f44336;;
@@ -110,4 +168,13 @@ h1{
 .styled-table tbody tr.active-row {
     font-weight: bold;
     color: #009879;
+}
+.acceptgreen{
+    background-color: #009879;
+}
+.pendingyellow{
+    background-color:rgb(235, 235, 37);
+}
+.deniedred{
+    background-color:#f44336;
 }

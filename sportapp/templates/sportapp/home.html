@@ -13,7 +13,7 @@
     <a href="{% url 'clubsList' %}">Secys</a>
     {% endif %}
     {% if super%}
-    <a href="{% url 'superindent' %}">Superindent</a>
+    <a href="{% url 'superindent' 0 %}">Pending Requests</a>
      {% endif %}
     {% if clubs_list %}
     {% for club in clubs_list %}
@@ -38,7 +38,9 @@
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
   {% endif %}
 
-   
+   {% if gensec or super %}
+    <a href="{% url 'total_list' %}"> Total Issues </a> 
+    {% endif %}
   
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
 </div>
