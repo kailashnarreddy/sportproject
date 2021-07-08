@@ -26,6 +26,7 @@ class equipment(models.Model):
     sport= models.ForeignKey('clubs', on_delete=models.CASCADE)
     specification=models.TextField(null=True)
     date=models.DateTimeField(auto_now=True)
+    price=models.FloatField(null=True)
     def __str__(self):
         return self.name      
 
@@ -52,6 +53,7 @@ class generalequipment(models.Model):
     total_quantity= models.IntegerField(null=True)
     available_quantity=models.IntegerField(null=True)
     specification=models.TextField(null=True)
+    price=models.FloatField(null=True)
     date=models.DateTimeField(auto_now=True)
 
     def __str__(self):
