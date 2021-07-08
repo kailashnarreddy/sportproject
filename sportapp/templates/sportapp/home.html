@@ -22,7 +22,9 @@
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
+    {% if isre %}
     <a href="{% url 'IssueList' club.pk  %}">Issue History</a>
+    {% endif %}
   </div>
   {% endfor %}   
   {% endif %}
@@ -32,7 +34,9 @@
   </button>
   <div class="dropdown-container">
      <a href="{% url 'general' %}">Register stock</a>
+     {% if isre %}
     <a href="{% url 'generalIssueList'   %}">Issue History</a>
+    {%endif%}
   </div>
   {% if gensec %}
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
