@@ -27,7 +27,9 @@
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
+     {% if isre%}
     <a href="{% url 'IssueList' club.pk %}">Issue History</a>
+    {% endif %}
   </div>
   {% endfor %}
   {% endif %}
@@ -36,12 +38,14 @@
   </button>
   <div class="dropdown-container">
      <a href="{% url 'general' %}">Register stock</a>
+      {% if isre%}
     <a href="{% url 'generalIssueList'   %}">Issue History</a>
+    {% endif %}
   </div>
     {% if gensec %}
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
   {% endif %}
-  {% if gensec or super %}
+  {% if super %}
     <a href="{% url 'total_list' %}"> Total Issues </a> 
     {% endif %}
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a> 
@@ -49,7 +53,7 @@
 </div>
 
 <div class="main">
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Name/Specification.." title="Type in a name">
 {% if gensec or super %}
     <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
     <h1>
@@ -70,14 +74,15 @@
             <th>sno</th>
             <th>Name</th>
             <th>Specificaton</th>
+            <th>Price</th>
             <th>Date</th>
             <th>Total Quantity</th>
             <th>Available Quantity</th>
-            {%if super or gensec%}
+            {%if super %}
 
             <th>Delete</th>
              {% endif %}
-            {% if not super %}
+            {% if not super and isre %}
             <th>Issue</th>
             <th>Return</th>
             {% endif %}
@@ -90,13 +95,15 @@
         <td></td>
         <td>{{equi.name}}</td>
         <td>{{equi.specification}}</td>
+          <td>{{equi.price}}</td> 
         <td>{{equi.date}}</td>
         <td>{{equi.total_quantity}}</td>
         <td>{{equi.available_quantity}}</td>
-        {%if super or gensec%}
-        <td><a href="{% url 'equipmentDelete' pk=pk id=equi.id %}"><button class="redb" >delete</button></a></td>
+        {%if super%}
+        <td><a href="{% url 'equipmentDelete' pk=pk id=equi.id %}" onclick="return confirm('Are you sure you want to delete this?')" ><button class="redb" >delete</button></a></td>
+           
         {% endif %}
-        {% if not super  %}
+        {% if not super and isre  %}
         <td><a href="{% url 'Issue' pk=pk id=equi.id %}"><button class="grayb">Issue</button></a></td>
         <td><a href="{% url 'Return' pk=pk id=equi.id %}"><button class="grayb">Return</button></td>
         {% endif %}
@@ -110,39 +117,12 @@
   {% endif %}
 
 </div>
-<script>
-  function myFunction() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myInput");
-    console.log(input)
-    filter = input.value.toUpperCase();
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 1; i < tr.length; i++) {
-      var tds = tr[i].getElementsByTagName("td");
 
-    // hide the row
-    tr[i].style.display = "none";
-
-    // loop through row cells
-    for (var i2 = 1; i2 < 3; i2++) {
-
-      // if there's a match
-      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1) {
-
-        // show the row
-        tr[i].style.display = "";
-
-        // skip to the next row
-        continue;
-
-      }
-    }
-  }
-}
   </script>
 <script src="../../static/sidebar.js">
 </script>
+<script src="../../static/equipment_search.js"> </script>
+
 </body>
 </html>
 
