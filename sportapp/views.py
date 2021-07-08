@@ -26,46 +26,38 @@ def issup(request):
         return False    
 
 def allclubs() :
-    clubs_list=clubs.objects.all()                     # all clublists
+    clubs_list=clubs.objects.all()                                                         # all clublists
     return clubs_list
     
 # Create your views here.
 def Home1(request):
     return render(request,'sportapp/home1.html')
-@login_required(redirect_field_name='')      
-def Index(request):     
-                                  # home page view
-    clubs_list=clubs.objects.all()
-  
-    user=request.user
-  
-    if isgen(request) or issup(request):               # superindent and gensec view
-             context = {
-            'clubs_list':clubs_list,
-            'super':issup(request),
-                 'gensec':isgen(request),
-                    }
-             return render(request,'sportapp/home.html',context)
-    else:                                              # club secy view
-        
-        clubs_list=clubs.objects.all()
-        for club in clubs_list:
-            if (str(club.email)==str(user.email)):
-                 clu=[]
-                 clu.append(club)
-                 context = {
-                 'clubs_list':clu,
-                 'super':issup(request)
-                  
-                    }
-                 return render(request,'sportapp/home.html',context)
 
-       
-    #raise Http404("Page does not exist")               # raise error(if user is not given permission to access this site)
-    return render(request,'sportapp/home1.html')
+@login_required(redirect_field_name='')      
+def Index(request):                                                                       # home page view
+    clubs_list=clubs.objects.all()
+    secy=0                                                                 # to separate general users from secy
+    superin=issup(request)
+    gensec=isgen(request)
+    if(clubs.objects.filter(email=request.user.email)):
+                clubs_list=clubs.objects.filter(email=request.user.email)
+                secy=1
+    elif(gensec or superin):
+           secy=1
+    
+
+    context = {
+            'clubs_list':clubs_list,
+            'super':superin,
+                 'gensec':gensec,
+                 'isre':secy
+                    }            
+    return render(request,'sportapp/home.html',context)
+
+    
 @login_required(redirect_field_name='')    
-def ClubsView(request):                               # club adding view
-  if isgen(request) or issup(request)  :               # only visible to gensec and superindent
+def ClubsView(request):                                                                    # club adding view
+  if isgen(request) or issup(request)  :                                                   # only visible to gensec and superindent
     if request.method == 'POST':
         
         form = ClubForm(request.POST)
@@ -80,9 +72,11 @@ def ClubsView(request):                               # club adding view
             'form':form,
         }
     return render(request, 'sportapp/add_club.html', context)   
-  raise Http404("Page does not exist")      
+  raise Http404("Page does not exist")   
+
+
 @login_required(redirect_field_name='')                     
-def UpdateClubsView(request,pk):             #pk of the club             # editing club information  
+def UpdateClubsView(request,pk):                                                             #pk of the club             # editing club information  
  if isgen(request) or issup(request) :                       
     if request.method == 'POST':
         form1 = ClubForm(request.POST)
@@ -93,7 +87,7 @@ def UpdateClubsView(request,pk):             #pk of the club             # editi
 
     else:
         club=clubs.objects.get(pk=pk)
-        dict={                                        # for showing the prensent club information in the html form before editing (Get method)
+        dict={                                              # for showing the prensent club information in the html form before editing (Get method)
             "name":club.name,
             "secy_name":club.secy_name,
             "email":club.email,
@@ -108,6 +102,7 @@ def UpdateClubsView(request,pk):             #pk of the club             # editi
 
  raise Http404("Page does not exist")  
         
+
 @login_required(redirect_field_name='')    
 def ClubsListView(request): #   clubslist page view
  
@@ -121,14 +116,14 @@ def ClubsListView(request): #   clubslist page view
     return render(request,'sportapp/clubs_list.html',context)
   raise Http404("Page does not exist")
 @login_required(redirect_field_name='')        
-def EquipmentView(request,pk):                          # adding club equipments view
-   if isgen(request) or issup(request):
+def EquipmentView(request,pk):                                                      # adding club equipments 
+   if  issup(request):
     if request.method == 'POST':
         form = EquipmentForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
             post.available_quantity=post.total_quantity        
-            post.sport=clubs.objects.get(pk=pk)        # linking equipment to clubs table
+            post.sport=clubs.objects.get(pk=pk)                                      # linking equipment to clubs table
             post.save()
             return redirect('equipmentsList',pk=pk)
     else:
@@ -139,9 +134,11 @@ def EquipmentView(request,pk):                          # adding club equipments
         }
     return render(request, 'sportapp/add_equipment.html', context)    
    raise Http404("Page does not exist")   
+
+
 @login_required(redirect_field_name='')          
-def addgeneral(request):                           #adding general equipments view
-  if issup(request) or isgen(request):  
+def addgeneral(request):                                                                 #adding general equipments view
+  if issup(request) :  
     if request.method == 'POST':
         form = generalequipmentform(request.POST)
         if form.is_valid():
@@ -155,99 +152,91 @@ def addgeneral(request):                           #adding general equipments vi
             'form':form,
         }
     return render(request, 'sportapp/add_equipment.html', context) 
-  raise Http404("Page does not exist")        
+  raise Http404("Page does not exist")      
 
-def alphabet(d):                  #function for sorting based on name of the equipments
+
+def alphabet(d):                                                           #function for sorting based on name of the equipments
     return d.name        
-@login_required(redirect_field_name='')    
-def EquipmentListView(request,pk):          #Equipment list view
-   if request.user.email == clubs.objects.get(pk=pk).email or isgen(request) or issup(request):
+@login_required(redirect_field_name='') 
+
+
+def EquipmentListView(request,pk):                                        #Equipment list view
+
     clubs_list=clubs.objects.all()
-    club=clubs.objects.get(pk=pk)             # retrieving the required club
-    equipments=club.equipment_set.all()       # all equipments of the required club
-    equipments1=list(equipments)              # converting the equipments in the required club to list data type to sort them in alphabetical order
+    club=clubs.objects.get(pk=pk)                                           # retrieving the required club
+    equipments=club.equipment_set.all()                                     # all equipments of the required club
+    equipments1=list(equipments)                                            # converting the equipments in the required club to list data type to sort them in alphabetical order
     equipments1.sort(key=alphabet)            
-    c=club.name
-    superin=0
-    gensec=0
+    superin=issup(request)
+    gensec=isgen(request)
+    isre=0                                                                   # to separate general users from secy
+    if(clubs.objects.filter(email=request.user.email)):                      #to find if user is secy of any club or general user
+                clubs_list=clubs.objects.filter(email=request.user.email)            
+                isre=1
+    elif(gensec or superin):
+           isre=1
+      
+    context = {
+             'clubs_list': clubs_list,
+             'pk': pk,
+            'equipments':equipments1,
+            'super':superin,
+            'gensec':gensec,
+            'isre':isre
+        }  
     
-    if issup(request)  :
-      superin=1
-    if isgen(request) :
-      gensec=1 
-    if superin or gensec :
-     context = {
-             'clubs_list': clubs_list,
-             'pk': pk,
-            'equipments':equipments1,
-            'super':superin,
-            'gensec':gensec
-        }
-     return render(request, 'sportapp/equipments_list.html', context)     
-    else :                                                   # for secy view
-       clubs_list=clubs.objects.filter(email=request.user.email)       # one club should be visible for secy in side bar(so retrieving the club)
-       context = {
-             'clubs_list': clubs_list,
-             'pk': pk,
-            'equipments':equipments1,
-            'super':superin,
-            'gensec':gensec
-        }
-       return render(request, 'sportapp/equipments_list.html', context)      
-   else:
-       raise Http404("Page does not exist")  
+    return render(request, 'sportapp/equipments_list.html', context)   
+
 @login_required(redirect_field_name='')    
 def general(request):                #General equipment list view
+ 
     clubs_list=clubs.objects.all()
     equipments=generalequipment.objects.all()
     equipments1=list(equipments)       
 
     equipments1.sort(key=alphabet)
-    superin=0
-    gensec=0
-    
-    if issup(request) :
-      superin=1
-    if isgen(request) :
-      gensec=1 
-    if gensec or superin :
-      context = {
+    superin=issup(request)
+    gensec=isgen(request)
+    isre=0
+    if(clubs.objects.filter(email=request.user.email)):
+                clubs_list=clubs.objects.filter(email=request.user.email)
+                isre=1
+    elif(gensec or superin):
+           isre=1  
+    context = {
              'clubs_list': clubs_list,
             'equipments':equipments1,
-            'super':superin,'gensec':gensec
-        }
-     
-      return render(request,'sportapp/general.html',context)
-    else :
-       clubs_list=clubs.objects.filter(email=request.user.email)
-       context = {
-             'clubs_list': clubs_list,
-            'equipments':equipments1,
-            'super':superin,'gensec':gensec
-        }
-     
-       return render(request,'sportapp/general.html',context)
+            'super':superin,'gensec':gensec,
+            'isre':isre
+        }  
+  
+    return render(request, 'sportapp/general.html', context)  
+
 
 @login_required(redirect_field_name='')    
 def deleteEquipmentView(request,id,pk):         #deleting equipments of club  
- if isgen(request) or issup(request)  : 
+ if  issup(request)  : 
     if isgen(request) or issup(request) :
      a=equipment.objects.filter(id=id)              # id of the equipment
      a.delete()
      return redirect('equipmentsList',pk=pk)        # pk of the club
  else :
-    raise Http404("Page does not exist")     
+    raise Http404("Page does not exist")  
+
+
 @login_required(redirect_field_name='')    
 def generaldelete(request,id):                     # deleting general equipments
-  if isgen(request) or issup(request):  
+  if  issup(request):  
     a=generalequipment.objects.get(pk=id)
     a.delete()
     return redirect('general')                    # redirecting to general equipments list
   else :
     raise Http404("Page does not exist")
+
+
 @login_required(redirect_field_name='')        
 def IssueFormView(request,pk,id):                # issuing club equipments
-   if not issup(request): 
+   if  isgen(request) or clubs.objects.filter(email=request.user.email) : 
     equip=get_object_or_404(equipment, id=id)        # id of the equipment to te issued
    
     if request.method == 'POST':
@@ -274,11 +263,13 @@ def IssueFormView(request,pk,id):                # issuing club equipments
             'form':form,
             'maximum_value':equip.available_quantity                  # maximum quantity can be issued passed to html
         }
-        return render(request, 'sportapp/Issue.html', context)      
+        return render(request, 'sportapp/Issue.html', context)  
+
+
    raise Http404("Page does not exist")
 @login_required(redirect_field_name='')    
 def generalissue(request,pk):                           # issuing general equipments
-  if not issup(request): 
+  if not issup(request) and clubs.objects.filter(email=request.user.email) : 
     equip=get_object_or_404(generalequipment, pk=pk)
     if request.method == 'POST':
         form = IssueForm(request.POST)
@@ -293,7 +284,7 @@ def generalissue(request,pk):                           # issuing general equipm
                 post.is_gen=0;
                 post.user=clubs.objects.get(email=request.user.email)
             post.save()
-            return redirect('general')  
+            return redirect('generalIssueList')  
     else:
         form = IssueForm()
         context = {
@@ -305,6 +296,7 @@ def generalissue(request,pk):                           # issuing general equipm
 
 def myfuc(d):         #function to sort issues based on date
     return d.date
+
 @login_required(redirect_field_name='')        
 def IssueListView(request,pk):     # list of issues of club equipments by gen sec and club secy  and general equipment issues by club secy
    if request.user.email == clubs.objects.get(pk=pk).email or isgen(request) or issup(request):
@@ -335,34 +327,29 @@ def IssueListView(request,pk):     # list of issues of club equipments by gen se
     issue_list.reverse()  
     issue_list.sort(reverse=True,key=myfuc)
     
-    gensec=0
-    if isgen(request):
-        gensec=1    
-    if gensec or issup(request) :          
-     context = {
+    gensec=isgen(request)
+    superin=issup(request)  
+    context = {
              'clubs_list': clubs_list,
              'pk': pk,
             'issue_list':issue_list,
             'equipments':equipments,
             'gensec':gensec,
-            'super':issup(request)
-        }
-     return render(request, 'sportapp/Issue_list.html', context)
+            'super':superin
+        }     
+    if gensec or issup(request) :          
+      return render(request, 'sportapp/Issue_list.html', context)
     else :
         clubs_list=clubs.objects.filter(email=request.user.email)
-        context = {
-             'clubs_list': clubs_list,
-             'pk': pk,
-            'issue_list':issue_list,
-            'equipments':equipments,
-            'gensec':gensec,
-            'super':issup(request)
-        }
+        context['clubs_list']=clubs_list
         return render(request, 'sportapp/Issue_list.html', context)
    else:
        raise Http404("Page does not exist")
+
+
 @login_required(redirect_field_name='')    
 def generallist(request):                # issues of general equipments
+   if  isgen(request) or issup(request) or clubs.objects.filter(email=request.user.email): 
     clubs_list=clubs.objects.all() 
     issue_list=issue.objects.filter(equipment_name=None)
     
@@ -370,16 +357,17 @@ def generallist(request):                # issues of general equipments
     for i in range(len(issue_list)):               
                 iss.append(issue_list[i])
     iss.reverse()            
-    gensec=0
-    if isgen(request):
-        gensec=1
+    gensec=isgen(request)
+    superin=issup(request)
+    context={'issue_list':iss,'clubs_list':clubs_list,'gensec':gensec,'super':superin}
     if gensec or issup(request) :          
-     context={'issue_list':iss,'clubs_list':clubs_list,'gensec':gensec,'super':issup(request)}
      return render(request, 'sportapp/Issue_list.html', context)
     else :
         clubs_list=clubs.objects.filter(email=request.user.email)
-        context={'issue_list':iss,'clubs_list':clubs_list,'gensec':gensec,'super':issup(request)}
+        context['clubs_list']=clubs_list
         return render(request, 'sportapp/Issue_list.html', context)    
+   else :
+    raise Http404("Page does not exist")
 
 @login_required(redirect_field_name='')        
 def gensecissuelist(request):          # all issues by general secretary
@@ -392,6 +380,8 @@ def gensecissuelist(request):          # all issues by general secretary
        context={'issue_list':iss,'clubs_list':allclubs(),'gensec':1,'super':issup(request)}
        return render(request,'sportapp/Issue_list.html',context)  
    raise Http404("Pasge does not exist")    
+
+
 @login_required(redirect_field_name='')       
 def returnequipment(request,pk,id):         # returning equipments of club
    if not issup(request):  
@@ -422,6 +412,8 @@ def returnequipment(request,pk,id):         # returning equipments of club
         }
         return render(request, 'sportapp/return_form.html', context)    
    raise Http404("Page does not exist")
+
+
 @login_required(redirect_field_name='')       
 def generalreturn(request,id):           #returning general equipments
    if not issup(request):  
@@ -470,6 +462,8 @@ def superindent(request,num):            # issue and return requests to superind
         return render(request,'sportapp/superindent.html',context)  
     else :        
      raise Http404("Page does not exist")
+
+
 @login_required(redirect_field_name='')         
 def accept(request,pk):             #accepting issue or return by superindent
   if issup(request):   
@@ -519,7 +513,9 @@ def accept(request,pk):             #accepting issue or return by superindent
      return render(request,'sportapp/remarkform.html',{'form':form})  
   else :        
      raise Http404("Page does not exist")  
+
 @login_required(redirect_field_name='')    
+
 def deny(request,pk):          # denying issue or return requests by superindent
  if issup(request):     
   if request.method=='POST': 
@@ -532,15 +528,20 @@ def deny(request,pk):          # denying issue or return requests by superindent
     form=remarkform(initial={'remark': "None" })
     return render(request,'sportapp/remarkform.html',{'form':form}) 
  else :        
-     raise Http404("Page does not exist")          
+     raise Http404("Page does not exist")         
+
+
 @login_required(redirect_field_name='')  
 def total_list(request):
     if isgen(request) or issup(request) :
         iss=issue.objects.filter(is_pending=0)
+        iss=iss.reverse()
         context={'issue_list':iss,
                   'super':issup(request),
                    'gensec':isgen(request),
                     'clubs_list':allclubs()   }
-    return render(request,'sportapp/Total_list.html',context)    
+        return render(request,'sportapp/Total_list.html',context)    
+    else:
+        raise Http404("Page does not exist") 
 
 
