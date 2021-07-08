@@ -12,7 +12,7 @@ class ClubForm(forms.ModelForm):
 class EquipmentForm(forms.ModelForm):
     class Meta:
         model=equipment
-        fields=['name','total_quantity','specification']
+        fields=['name','total_quantity','price','specification']
 
 class IssueForm(forms.ModelForm):
     class Meta:
@@ -25,7 +25,7 @@ class ReturnForm(forms.ModelForm):
 class generalequipmentform(forms.ModelForm):
     class Meta:
         model=generalequipment
-        fields=['name','total_quantity','specification']
+        fields=['name','total_quantity','price','specification']
 
 class remarkform(forms.ModelForm):
     class Meta:
