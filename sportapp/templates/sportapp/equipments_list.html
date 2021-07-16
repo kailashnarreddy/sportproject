@@ -27,12 +27,27 @@
   </button>
   <div class="dropdown-container">
     <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
-     {% if isre%}
+     {% if isre %}
     <a href="{% url 'IssueList' club.pk %}">Issue History</a>
     {% endif %}
   </div>
   {% endfor %}
   {% endif %}
+   {% if rem %}
+    {% for club in rem %}
+
+  <button class="dropdown-btn">{{club.name}}
+    <i class="fa fa-caret-down"></i>
+    </button>
+
+
+  </button>
+  <div class="dropdown-container">
+    <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
+  </div>
+  {% endfor %}
+  {% endif %}
+
    <button class="dropdown-btn">General items
     <i class="fa fa-caret-down"></i>
   </button>
@@ -54,7 +69,7 @@
 
 <div class="main">
 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Name/Specification.." title="Type in a name">
-{% if gensec or super %}
+{% if super %}
     <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
     <h1>
         Equipments list
@@ -82,7 +97,7 @@
 
             <th>Delete</th>
              {% endif %}
-            {% if not super and isre %}
+            {% if not super and isre and ownclub or gensec %}
             <th>Issue</th>
             <th>Return</th>
             {% endif %}
@@ -103,7 +118,7 @@
         <td><a href="{% url 'equipmentDelete' pk=pk id=equi.id %}" onclick="return confirm('Are you sure you want to delete this?')" ><button class="redb" >delete</button></a></td>
            
         {% endif %}
-        {% if not super and isre  %}
+        {% if not super and isre and ownclub or gensec  %}
         <td><a href="{% url 'Issue' pk=pk id=equi.id %}"><button class="grayb">Issue</button></a></td>
         <td><a href="{% url 'Return' pk=pk id=equi.id %}"><button class="grayb">Return</button></td>
         {% endif %}
