@@ -57,7 +57,7 @@
     {% if gensec %}
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
   {% endif %}
-  {% if  super or gensec %}
+  {% if  super  %}
     <a href="{% url 'total_list' %}"> Total Issues </a> 
     {% endif %}
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
