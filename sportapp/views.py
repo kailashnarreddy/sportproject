@@ -39,18 +39,27 @@ def Index(request):                                                             
     secy=0                                                                 # to separate general users from secy
     superin=issup(request)
     gensec=isgen(request)
-    if(clubs.objects.filter(email=request.user.email)):
+    rem_clubs=[]
+                                                                   # to separate general users from secy
+   
+    if(clubs.objects.filter(email=request.user.email)):                      #to find if user is secy of any club or general user
                 clubs_list=clubs.objects.filter(email=request.user.email)
-                secy=1
+                rem_clubs=clubs.objects.exclude(email=request.user.email)      
+                secy=1 
+                
+
+
+                
     elif(gensec or superin):
            secy=1
     
-
+    
     context = {
             'clubs_list':clubs_list,
             'super':superin,
                  'gensec':gensec,
-                 'isre':secy
+                 'isre':secy,
+                  'rem':rem_clubs
                     }            
     return render(request,'sportapp/home.html',context)
 
@@ -169,12 +178,23 @@ def EquipmentListView(request,pk):                                        #Equip
     equipments1.sort(key=alphabet)            
     superin=issup(request)
     gensec=isgen(request)
-    isre=0                                                                   # to separate general users from secy
+    isre=0        
+    rem_clubs=[]     
+       
+    ownclub=0                                                              # to separate general users from secy
+   
     if(clubs.objects.filter(email=request.user.email)):                      #to find if user is secy of any club or general user
-                clubs_list=clubs.objects.filter(email=request.user.email)            
-                isre=1
+                clubs_list=clubs.objects.filter(email=request.user.email)
+                rem_clubs=clubs.objects.exclude(email=request.user.email)      
+                 
+                isre=1   
+                if(clubs.objects.get(email=request.user.email).email==club.email):
+                   ownclub=1           
     elif(gensec or superin):
            isre=1
+
+  
+             
       
     context = {
              'clubs_list': clubs_list,
@@ -182,7 +202,10 @@ def EquipmentListView(request,pk):                                        #Equip
             'equipments':equipments1,
             'super':superin,
             'gensec':gensec,
-            'isre':isre
+            'isre':isre,
+            'rem':rem_clubs,
+            
+            'ownclub':ownclub
         }  
     
     return render(request, 'sportapp/equipments_list.html', context)   
@@ -198,16 +221,23 @@ def general(request):                #General equipment list view
     superin=issup(request)
     gensec=isgen(request)
     isre=0
+    rem_clubs=[]     
+      
     if(clubs.objects.filter(email=request.user.email)):
                 clubs_list=clubs.objects.filter(email=request.user.email)
-                isre=1
+                rem_clubs=clubs.objects.exclude(email=request.user.email)      
+                 
+                isre=1  
     elif(gensec or superin):
            isre=1  
+        
     context = {
              'clubs_list': clubs_list,
             'equipments':equipments1,
             'super':superin,'gensec':gensec,
-            'isre':isre
+            'isre':isre,
+            'rem':rem_clubs
+         
         }  
   
     return render(request, 'sportapp/general.html', context)  
@@ -308,7 +338,9 @@ def IssueListView(request,pk):     # list of issues of club equipments by gen se
     issue_list=[]
     secy=clubs.objects.get(pk=pk).email    # get the secy of the required club
     genlist=set()
-    
+    rem_clubs=[]     
+       
+
     for equip in equipments:
         for o in tot_list:
            if o.equipment_name : 
@@ -335,12 +367,15 @@ def IssueListView(request,pk):     # list of issues of club equipments by gen se
             'issue_list':issue_list,
             'equipments':equipments,
             'gensec':gensec,
-            'super':superin
+            'super':superin,
+            'rem':rem_clubs,
+        
         }     
-    if gensec or issup(request) :          
+    if gensec or superin :          
       return render(request, 'sportapp/Issue_list.html', context)
     else :
         clubs_list=clubs.objects.filter(email=request.user.email)
+        context['rem']=clubs.objects.exclude(email=request.user.email)
         context['clubs_list']=clubs_list
         return render(request, 'sportapp/Issue_list.html', context)
    else:
@@ -352,19 +387,20 @@ def generallist(request):                # issues of general equipments
    if  isgen(request) or issup(request) or clubs.objects.filter(email=request.user.email): 
     clubs_list=clubs.objects.all() 
     issue_list=issue.objects.filter(equipment_name=None)
-    
+    rem_clubs=[]
     iss=[]
     for i in range(len(issue_list)):               
                 iss.append(issue_list[i])
     iss.reverse()            
     gensec=isgen(request)
     superin=issup(request)
-    context={'issue_list':iss,'clubs_list':clubs_list,'gensec':gensec,'super':superin}
+    context={'issue_list':iss,'clubs_list':clubs_list,'gensec':gensec,'super':superin,'rem':rem_clubs}
     if gensec or issup(request) :          
      return render(request, 'sportapp/Issue_list.html', context)
     else :
         clubs_list=clubs.objects.filter(email=request.user.email)
         context['clubs_list']=clubs_list
+        context['rem']=clubs.objects.exclude(email=request.user.email)
         return render(request, 'sportapp/Issue_list.html', context)    
    else :
     raise Http404("Page does not exist")
@@ -533,7 +569,7 @@ def deny(request,pk):          # denying issue or return requests by superindent
 
 @login_required(redirect_field_name='')  
 def total_list(request):
-    if isgen(request) or issup(request) :
+    if  issup(request) :
         iss=issue.objects.filter(is_pending=0)
         iss=iss.reverse()
         context={'issue_list':iss,
