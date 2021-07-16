@@ -31,6 +31,22 @@
   </div>
   {% endfor %}
   {% endif %}
+
+     {% if rem %}
+    {% for club in rem %}
+
+  <button class="dropdown-btn">{{club.name}}
+    <i class="fa fa-caret-down"></i>
+    </button>
+
+
+  </button>
+  <div class="dropdown-container">
+    <a href="{% url 'equipmentsList' club.pk %}">Register stock</a>
+  </div>
+  {% endfor %}
+  {% endif %}
+
     <button class="dropdown-btn">General items
     <i class="fa fa-caret-down"></i>
   </button>
@@ -41,7 +57,7 @@
     {% if gensec %}
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
   {% endif %}
-  {% if gensec or super %}
+  {% if  super %}
     <a href="{% url 'total_list' %}"> Total Issues </a> 
     {% endif %}
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
