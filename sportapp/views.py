@@ -21,7 +21,7 @@ def isgen(request):
 
 
 def issup(request):
-    if request.user.email=="bkartheek@iitg.ac.in":     # mail id of Superindent
+    if request.user.email=="kpatel@iitg.ac.in":     # mail id of Superindent
         return True
     else :
         return False      

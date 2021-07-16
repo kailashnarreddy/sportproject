@@ -45,10 +45,13 @@
 </div>
 
 <div class="main">
-    <a href="{% url 'clubs' %}" class="myButton">Add Clubs</a>
-    <h1>
-        Clubs list
-    </h1>
+    <div class="header"><h1>Clubs list</h1>
+      <span>
+        <a href="{% url 'clubs' %}" class="myButton">Add Clubs</a>
+      </span>
+      <hr style="width:100%", size="3", color=black> 
+    </div>
+
     {% if clubs_list %}
         <table style="width:100%" class="styled-table" >
           <thead>

@@ -57,7 +57,7 @@
     {% if gensec %}
   <a href="{% url 'gensecissuelist' %}"> My_issues</a>
   {% endif %}
-  {% if  super  %}
+  {% if  super %}
     <a href="{% url 'total_list' %}"> Total Issues </a> 
     {% endif %}
   <a href="{% url 'django_auth_adfs:logout' %}">Logout</a>
@@ -68,22 +68,24 @@
 
 <div class="main">
 
-  <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
-
-  <select id="location-select" name="locationselect">
-    <option value="">All</option>
-    <option value="issued">Issued</option>
-      <option value="issue denied">Issue denied</option>
-    <option value="returned">Returned</option>
-   
-    <option value="return denied">Return denied</option>
-    <option value="issue request pending">Issue request pending</option>
-    <option value="return request pending">Return request pending</option>
-  </select>
+  <div class="header"><h1>Issue History</h1>
+    <span>
+    <select id="location-select" name="locationselect">
+      <option value="">All</option>
+      <option value="issued">Issued</option>
+        <option value="issue denied">Issue denied</option>
+      <option value="returned">Returned</option>
+     
+      <option value="return denied">Return denied</option>
+      <option value="issue request pending">Issue request pending</option>
+      <option value="return request pending">Return request pending</option>
+    </select>
   
-    <h1>
-        Issue History
-    </h1>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="search here..." title="Type in a name">
+    </span>
+    <hr style="width:100%", size="3", color=black> 
+  </div>
+   
     {% if issue_list %}
     <table style="width:100%" class="styled-table" id="myTable" >
       <thead>
@@ -137,10 +139,6 @@
          <td class="acceptgreen">returned</td>
         {%else%}
            <td class="deniedred">return denied</td>
-
-        <td class="acceptgreen">returned</td>
-        {%else%}
-        <td class="deniedred">return denied</td>
         {% endif %}
         {% endif %}
         {% else %}
@@ -149,12 +147,12 @@
         {% else %}
         {%if obj.req%}
         <td class="acceptgreen">issued</td>
-       <td class="acceptgreen">issued</td>
        {%else%}
        <td class="deniedred">issue denied</td>
        {%endif%}
         {% endif %}
         {% endif %}
+
 
       </tr>
     {% endfor %}
@@ -167,72 +165,6 @@
 
  {% if not super %}
 <script src="../../static/issue_list_search.js">
-<script>
-
-$(document).ready(function(){
-
-  $("#location-select").change(function(){
-        // Retrieve the option value and reset the count to zero
-        var locationSelect = $(this).val(), count = 0;
-
-        $("table tr").each(function(index) {
-        if (index !== 0) {
-
-            $row = $(this);
-
-            var id = $row.find("td:eq(9)").text();
-
-            if (id.indexOf(locationSelect) !== 0) {
-                $row.hide();
-            }
-            else {
-                $row.show();
-                count++;
-
-            }
-        }
-
-    });
-   var numberItems = count;
-        $("#filter-select-count").text("*Results = "+count);
-
-    });
-      
-});
-
-
-function myFunction() {
-    var input, filter, table, tr, td, i, txtValue,locationSelect;
-    input = document.getElementById("myInput");
-    locationSelect= $( "#location-select" ).val();
-
-    filter = input.value.toUpperCase();
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 1; i < tr.length; i++) {
-      var tds = tr[i].getElementsByTagName("td");
-
-    // hide the row
-    tr[i].style.display = "none";
-
-    // loop through row cells
-    for (var i2 = 1; i2 < 4; i2++) {
-
-      // if there's a match
-      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1 ) {
-
-
-        // show the row
-        if(tds[9].innerHTML.indexOf(locationSelect)>-1)
-        tr[i].style.display = "";
-
-        // skip to the next row
-        continue;
-
-      }
-    }
-  }
-}
   </script>
 {% else %}
 <script src="../../static/issue_list_superindent_search.js" > 
@@ -244,3 +176,4 @@ function myFunction() {
 
 </body>
 </html>
+

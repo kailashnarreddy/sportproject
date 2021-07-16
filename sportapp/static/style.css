@@ -2,29 +2,30 @@
     font-family: 'Quicksand',sans-serif;
 }
 
- #myInput{
-    top: 20px;
-    color:black;
-    right: 300px;
-    /* background-image: url('/css/searchicon.png');
-    background-position: 10px 10px; */
-    /* background-repeat: no-repeat;
-    background-color: #8af0db; */
-    width: 400px;
-    font-size: 15px; 
-    height:20px;
-    display: block;
-    position: absolute;
-    padding: 10px;
-    border: 3px solid #009879;
-    background:#bdeee4;
+.header h1 { 
+    display: inline; 
   }
 
-  select {
+.header span{ 
+    float: right;
+  } 
+#myInput{
+    color:black;
+    margin-right:20px;
+    float: right;
+    width:400px;
+    font-size: 15px; 
+    height:20px;
+    padding: 7px;
+    background:#bdeee4;
+    border:3px solid black;
+    border-radius:5px;
+  }
+
+select {
     float:right;
-    top: 20px;
     background-repeat:no-repeat;
-    background-position:300px;
+    background-position:300px; 
     width: 200px;
     padding:10px;
     line-height:1;
@@ -52,13 +53,12 @@
 .myButton {
     color:white;
     background-color: #009879;
+    background-repeat:no-repeat;
     text-align:center;
     text-decoration: none;
-    position: absolute;
-    top: 20px;
-    right: 10px;
+    float:right;
+    margin:auto;
     padding: 10px; 
-    display: block;
     cursor: pointer;
     outline: none;
     border: none;
@@ -125,7 +125,7 @@ h1{
     font-size: 2em;
     font-weight:700;
     letter-spacing: 0px;
-    border-bottom: 2px solid black;
+    /* border-bottom: 2px solid black; */
     text-transform: uppercase;
 }
 
@@ -169,7 +169,6 @@ h1{
     font-weight: bold;
     color: #009879;
 }
-
 .acceptgreen{
     background-color: #009879;
 }
@@ -178,4 +177,4 @@ h1{
 }
 .deniedred{
     background-color:#f44336;
-
+}

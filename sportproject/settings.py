@@ -162,3 +162,6 @@ try:
     }
 except Exception as e:
     pass
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
