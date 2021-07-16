@@ -68,20 +68,30 @@
 </div>
 
 <div class="main">
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Name/Specification.." title="Type in a name">
+
 {% if super %}
-    <a href="{% url 'equipments' pk %}" class="myButton">Add Equipments</a>
-    <h1>
-        Equipments list
-    </h1>
+  <div class="header"><h1>Equipments list</h1>
+    <span>
+    <a href="{% url 'equipments' pk %}" class="myButton" >Add Equipments</a>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="search here..." title="Type in a name">
+    
+    </span>
+    <hr style="width:100%", size="3", color=black> 
+  </div>
+ 
      
      {% else  %}
 
     
-    <h1>
-        Equipments list
-    </h1>
+     <div class="header"><h1>Equipments list</h1>
+      <span>
+      <input type="text" id="myInput" onkeyup="myFunction()" placeholder="search here..." title="Type in a name">
+      </span>
+      <hr style="width:100%", size="3", color=black> 
+    </div>
+
     {% endif %}
+    
     {% if equipments %}
     <table style="width:100%" class="styled-table" id="myTable">
       <thead>

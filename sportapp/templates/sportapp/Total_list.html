@@ -52,22 +52,25 @@
 
 <div class="main">
 
-  <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+  <div class="header"><h1>Issue History</h1>
+    <span>
+    <select id="location-select" name="locationselect">
+      <option value="">All</option>
+      <option value="issued">Issued</option>
+        <option value="issue denied">Issue denied</option>
+      <option value="returned">Returned</option>
+     
+      <option value="return denied">Return denied</option>
+      <option value="issue request pending">Issue request pending</option>
+      <option value="return request pending">Return request pending</option>
+    </select>
+  
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="search here..." title="Type in a name">
+    </span>
+    <hr style="width:100%", size="3", color=black> 
+  </div>
 
-  <select id="location-select" name="locationselect">
-    <option value="">All</option>
-    <option value="issued">Issued</option>
-      <option value="issue denied">Issue denied</option>
-    <option value="returned">Returned</option>
-   
-    <option value="return denied">Return denied</option>
-    <option value="issue request pending">Issue request pending</option>
-    <option value="return request pending">Return request pending</option>
-  </select>
-  <span id="filter-select-count"></span>
-    <h1>
-        Issue History
-    </h1>
+  
     {% if issue_list %}
     <table style="width:100%" class="styled-table" id="myTable" >
       <thead>

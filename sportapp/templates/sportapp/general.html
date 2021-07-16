@@ -72,14 +72,24 @@
 </div>
 
 <div class="main">
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Name/Specification.." title="Type in a name">
- 
-<h1>
-        General Equipments list
-    </h1>
+
     
 {% if super %}
+  <div class="header"><h1>General Equipments list</h1>
+    <span>
     <a href="{% url 'addgeneral' %}" class="myButton">Add Equipments</a>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="search here..." title="Type in a name">
+    </span>
+    <hr style="width:100%", size="3", color=black> 
+  </div>
+  {% else %}
+
+  <div class="header"><h1>General Equipments list</h1>
+    <span>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="search here..." title="Type in a name">
+    </span>
+    <hr style="width:100%", size="3", color=black> 
+  </div>
     
    {% endif %}
  

@@ -7,41 +7,67 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="../../static/sidebar.css"> 
 <link rel="stylesheet" type="text/css" href="../../static/style.css"> 
-   <style>
-   .content{
-     max-width:444px;
-  margin-top:1%;
-  margin-left:38%;
+<style>
+
+body {
+  background-color: #faf2e4; 
+  margin: 0 15%;
+  font-family: sans-serif;
+  }
+
+.h11{
+  border-bottom: 3px solid black;
 }
-h1{
-  margin-top:5%;
-  max-width:444px;
-  margin-left:36%;
+
+h1 {
+  text-align: center;
+  font-size: 3em;
+  font-family: 'Quicksand',sans-serif;
+  font-weight:600;
+  text-transform: uppercase;
+  margin-top: 30px;
 }
 .blue{
-  background-color:  blue;
-    border: 2px black;
-    border-radius: 15px;
-    color: white;
-    padding: 20px 50px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 20px;
-    margin-top:2%;
-    margin-left: 45%;
+	border: none;
+	background: #404040;
+	color: #ffffff !important;
+	font-weight: 700;
+  font-size: 20px;
+	padding: 20px;
+  width:200px;
+	text-transform: uppercase;
+	border-radius: 6px;
+	display: inline-block;
+	transition: all 0.3s ease 0s;
+
 }
+
+.blue:hover {
+	color: #009879 !important;
+	font-weight: 1200 !important;
+  font-weight: 700 !important;
+  font-size: 30px;
+	letter-spacing: 3px;
+	background: none;
+	/* -webkit-box-shadow : 0px 5px 40px -10px rgba(0,0,0,0.57);
+	-moz-box-shadow : 0px 5px 40px -10px rgba(0,0,0,0.57); */
+	transition: all 0.3s ease 0s;
+}
+
 </style>
 
 </head>
 <body>
 
 
-  <h1> Welcome to sports board!</h1>
-  <div class="content">
-      <img  class= "image" width="350" src="{% static 'iitg_logo.svg.png' %}" /></div> 
-  </div>
-<a href="{% url 'django_auth_adfs:login' %}" > <button class="blue">Login</button></a>  
+  
+  <div >
+      <h1 class="h11"> Welcome to sports board!</h1>
+      <h1><img  class= "image" width="350" src="{% static 'iitg_logo.svg.png' %}" /></h1>
+      <h1><a href="{% url 'django_auth_adfs:login' %}" >   <button class="blue">Login</button>   </a> </h1> 
+  </div> 
+
+
 
 </body>
 </html>
