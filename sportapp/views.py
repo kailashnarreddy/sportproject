@@ -15,9 +15,6 @@ from datetime import datetime
 def isgen(request):
 
     if request.user.email=="n.kailash@iitg.ac.in":
-
-    if request.user.email=="kpatel@iitg.ac.in":
-
         return True
     else :
         return False    
