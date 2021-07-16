@@ -13,7 +13,11 @@ from datetime import datetime
 
 
 def isgen(request):
+
     if request.user.email=="n.kailash@iitg.ac.in":
+
+    if request.user.email=="kpatel@iitg.ac.in":
+
         return True
     else :
         return False    
@@ -23,7 +27,7 @@ def issup(request):
     if request.user.email=="bkartheek@iitg.ac.in":     # mail id of Superindent
         return True
     else :
-        return False    
+        return False      
 
 def allclubs() :
     clubs_list=clubs.objects.all()                                                         # all clublists

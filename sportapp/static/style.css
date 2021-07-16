@@ -169,6 +169,7 @@ h1{
     font-weight: bold;
     color: #009879;
 }
+
 .acceptgreen{
     background-color: #009879;
 }
@@ -177,4 +178,4 @@ h1{
 }
 .deniedred{
     background-color:#f44336;
-}
+
