@@ -300,7 +300,7 @@ def IssueFormView(request,pk,id):                # issuing club equipments
    raise Http404("Page does not exist")
 @login_required(redirect_field_name='')    
 def generalissue(request,pk):                           # issuing general equipments
-  if not issup(request) and clubs.objects.filter(email=request.user.email) : 
+  if not issup(request) and (clubs.objects.filter(email=request.user.email) or isgen(request)) : 
     equip=get_object_or_404(generalequipment, pk=pk)
     if request.method == 'POST':
         form = IssueForm(request.POST)
