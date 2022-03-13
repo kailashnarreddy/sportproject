@@ -14,14 +14,14 @@ from datetime import datetime
 
 def isgen(request):
 
-    if request.user.email=="n.kailash@iitg.ac.in":
+    if request.user.email=="sportsec@iitg.ac.in":
         return True
     else :
         return False    
 
 
 def issup(request):
-    if request.user.email=="kpatel@iitg.ac.in":     # mail id of Superindent
+    if request.user.email=="chrsports@iitg.ac.in":     # mail id of Superindent
         return True
     else :
         return False      
